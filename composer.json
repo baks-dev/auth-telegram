@@ -1,0 +1,41 @@
+{
+  "name": "baks-dev/auth-telegram",
+  "description": "Модуль авторизации пользователя в Telegram",
+  "homepage": "https://github.com/baks-dev/auth-telegram",
+  "keywords": [
+    "library",
+    "symfony",
+    "auth",
+    "telegram",
+    "plugin",
+    "library",
+    "module",
+    "baksdev"
+  ],
+  "license": "MIT",
+  "type": "symfony-bundle",
+  "authors": [
+    {
+      "name": "Baks Development",
+      "email": "admin@baks.dev"
+    }
+  ],
+  "require": {
+    "php": ">=8.2"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest"
+  },
+  "autoload": {
+    "psr-4": {
+      "BaksDev\\Auth\\Telegram\\": ""
+    }
+  },
+
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "symfony/flex": true
+    }
+  }
+}
