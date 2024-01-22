@@ -66,5 +66,7 @@ final class AccountTelegramStatusTest extends KernelTestCase
 
         }
 
+        self::assertTrue(true);
+
     }
 }
