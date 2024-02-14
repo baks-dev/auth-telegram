@@ -50,25 +50,25 @@ final class ActiveAccountEventByChat implements ActiveAccountEventByChatInterfac
      */
     public function getActiveAccountOrNullResultByChat(int|string $chat): ?UserUid
     {
-        $qb = $this->DBALQueryBuilder->createQueryBuilder(self::class);
+        $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
-        $qb->select('telegram_event.account');
+        $dbal
+            ->select('telegram_event.account')
+            ->from(AccountTelegramEvent::TABLE, 'telegram_event');
 
-        $qb->from(AccountTelegramEvent::TABLE, 'telegram_event');
+        $dbal->where('telegram_event.chat = :chat')
+            ->setParameter('chat', (string) $chat);
 
-        $qb->where('telegram_event.chat = :chat');
-        $qb->setParameter('chat', (string) $chat);
-
-        $qb->andWhere('telegram_event.status = :telegram_status');
-        $qb->setParameter(
-            'telegram_status',
-            new AccountTelegramStatus(new AccountTelegramStatus\AccountTelegramStatusActive()),
-            AccountTelegramStatus::TYPE);
+        $dbal->andWhere('telegram_event.status = :telegram_status')
+            ->setParameter(
+                'telegram_status',
+                new AccountTelegramStatus(new AccountTelegramStatus\AccountTelegramStatusActive()),
+                AccountTelegramStatus::TYPE);
 
 
         $exist = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
-        $exist->select(1);
+        $exist->select('1');
         $exist->from(UserProfileInfo::TABLE, 'profile_info');
         $exist->where('profile_info.usr = telegram_event.account');
         $exist->andWhere('profile_info.status = :profile_status');
@@ -80,13 +80,13 @@ final class ActiveAccountEventByChat implements ActiveAccountEventByChatInterfac
             'profile',
             'profile.id = profile_info.profile');
 
-        $qb->setParameter('profile_status',
+        $dbal->setParameter('profile_status',
             new UserProfileStatus(UserProfileStatusActive::class),
             UserProfileStatus::TYPE);
 
-        $qb->andWhere('EXISTS('.$exist->getSQL().')');
+        $dbal->andWhere('EXISTS('.$exist->getSQL().')');
 
-        $result = $qb->enableCache('auth-telegram', 3600)->fetchOne();
+        $result = $dbal->enableCache('auth-telegram', 3600)->fetchOne();
 
         return $result ? new UserUid($result) : null;
     }

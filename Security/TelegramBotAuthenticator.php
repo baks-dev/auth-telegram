@@ -138,7 +138,6 @@ final class TelegramBotAuthenticator extends AbstractAuthenticator
                     return null;
                 }
 
-
                 if(isset($content['callback_query']))
                 {
                     if(
