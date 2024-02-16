@@ -47,15 +47,12 @@ final class IndexController extends AbstractController
         int $page = 0,
     ): Response
     {
-        dd('admin/account/telegrams');
-
-        
+        return new Response('admin/account/telegrams');
 
         // Поиск
         $search = new SearchDTO();
         $searchForm = $this->createForm(SearchForm::class, $search);
         $searchForm->handleRequest($request);
-
 
         // Фильтр
         // $filter = new ProductsStocksFilterDTO($request, $ROLE_ADMIN ? null : $this->getProfileUid());

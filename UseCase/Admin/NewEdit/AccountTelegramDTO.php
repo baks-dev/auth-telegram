@@ -28,6 +28,8 @@ namespace BaksDev\Auth\Telegram\UseCase\Admin\NewEdit;
 use BaksDev\Auth\Telegram\Entity\Event\AccountTelegramEventInterface;
 use BaksDev\Auth\Telegram\Type\Event\AccountTelegramEventUid;
 use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus;
+use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\Collection\AccountTelegramStatusInterface;
+use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\AccountTelegramStatusNew;
 use BaksDev\Users\User\Entity\User;
 use BaksDev\Users\User\Type\Id\UserUid;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -48,7 +50,6 @@ final class AccountTelegramDTO implements AccountTelegramEventInterface
      */
     #[Assert\Uuid]
     private ?UserUid $account = null;
-
 
     /**
      * Идентификатор чата
@@ -75,7 +76,7 @@ final class AccountTelegramDTO implements AccountTelegramEventInterface
 
     public function __construct()
     {
-        $this->status = new AccountTelegramStatus(new AccountTelegramStatus\AccountTelegramStatusActive());
+        $this->status = new AccountTelegramStatus(AccountTelegramStatusNew::class);
     }
 
     public function getEvent(): ?AccountTelegramEventUid
@@ -91,9 +92,10 @@ final class AccountTelegramDTO implements AccountTelegramEventInterface
         return $this->account;
     }
 
-    public function setAccount(User|UserUid $account): void
+    public function setAccount(User|UserUid|null $account): self
     {
         $this->account = $account instanceof User ? $account->getId() : $account;
+        return $this;
     }
 
 
@@ -105,9 +107,10 @@ final class AccountTelegramDTO implements AccountTelegramEventInterface
         return $this->chat;
     }
 
-    public function setChat(int|string $chat): void
+    public function setChat(int|string $chat): self
     {
         $this->chat = (string) $chat;
+        return $this;
     }
 
 
@@ -119,9 +122,10 @@ final class AccountTelegramDTO implements AccountTelegramEventInterface
         return $this->username;
     }
 
-    public function setUsername(string $username): void
+    public function setUsername(?string $username): self
     {
         $this->username = $username;
+        return $this;
     }
 
 
@@ -133,9 +137,10 @@ final class AccountTelegramDTO implements AccountTelegramEventInterface
         return $this->firstname;
     }
 
-    public function setFirstname(string $firstname): void
+    public function setFirstname(string $firstname): self
     {
         $this->firstname = $firstname;
+        return $this;
     }
 
 
@@ -147,9 +152,15 @@ final class AccountTelegramDTO implements AccountTelegramEventInterface
         return $this->status;
     }
 
-    public function setStatus(AccountTelegramStatus $status): void
+    public function setStatus(AccountTelegramStatus|AccountTelegramStatusInterface|string $status): self
     {
+        if(!$status instanceof AccountTelegramStatus)
+        {
+            $status = new AccountTelegramStatus($status);
+        }
+
         $this->status = $status;
+        return $this;
     }
 
 }

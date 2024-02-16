@@ -33,7 +33,7 @@ final class AccountTelegramStatusCollection
     private iterable $status;
 
     public function __construct(
-        #[TaggedIterator('baks.account.telegram.status', defaultPriorityMethod: 'sort')] iterable $status)
+        #[TaggedIterator('baks.account.telegram.status')] iterable $status)
     {
         $this->status = $status;
     }

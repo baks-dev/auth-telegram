@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,42 +21,20 @@
  *  THE SOFTWARE.
  */
 
-declare(strict_types=1);
+namespace BaksDev\Auth\Telegram\Repository\AccountTelegramEvent;
 
-namespace BaksDev\Auth\Telegram\Bot\Login\Email\Steps;
+use BaksDev\Auth\Telegram\Entity\Event\AccountTelegramEvent;
+use BaksDev\Users\User\Type\Id\UserUid;
 
-use BaksDev\Auth\Telegram\Bot\Login\Email\LoginStep;
-
-final class LoginStepStart extends LoginStep
+interface AccountTelegramEventInterface
 {
-    private string $nextStep = LoginStepEmail::class;
-
-    public function next(mixed $data = null): void
-    {
-        $this->context->transitionTo($this);
-    }
+    /**
+     * Метод получает событие по идентификатору чата
+     */
+    public function findByChat(int|string $chat): ?AccountTelegramEvent;
 
     /**
-     * Сообщение для отправили в Telegram
+     * Метод получает активное событие по идентификатору пользователя
      */
-    public function message(): ?string
-    {
-        return null;
-    }
-
-    /**
-     * Блок кнопок для отправили в Telegram
-     */
-    public function markup(): ?array
-    {
-        return null;
-    }
-
-    /**
-     * Класс следующего состояния
-     */
-    public function getNextStep(): string
-    {
-        return $this->nextStep;
-    }
+    public function findByUser(UserUid|string $usr): ?AccountTelegramEvent;
 }

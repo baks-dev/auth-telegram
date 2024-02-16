@@ -37,7 +37,6 @@ final class AccountTelegramStatus
 
     public function __construct(AccountTelegramStatusInterface|self|string $status)
     {
-
         if(is_string($status) && class_exists($status))
         {
             $instance = new $status();
@@ -60,6 +59,7 @@ final class AccountTelegramStatus
             $this->status = $status->getTelegramStatus();
             return;
         }
+
 
         /** @var AccountTelegramStatusInterface $declare */
         foreach(self::getDeclared() as $declare)

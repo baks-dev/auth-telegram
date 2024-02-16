@@ -23,44 +23,31 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Auth\Telegram\Bot\Login\Email\Steps;
+namespace BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus;
 
-use BaksDev\Auth\Telegram\Bot\Login\Email\LoginStep;
+use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\Collection\AccountTelegramStatusInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
-final class LoginStepEmail extends LoginStep
+/**
+ * Статус NEW «Новый»
+ */
+#[AutoconfigureTag('baks.account.telegram.status')]
+class AccountTelegramStatusNew implements AccountTelegramStatusInterface
 {
-    private string $nextStep = LoginStepPassword::class;
-
-    private string $message = 'Отправьте свой E-mail, с которого Вы регистрировались';
-
-    public function next(mixed $data = null): void
-    {
-        $this->setEmail($data);
-        $this->context->transitionTo($this);
-    }
-
     /**
-     * Сообщение для отправили в Telegram
+     * Статус NEW «Новый»
      */
-    public function message(): ?string
+    public const STATUS = 'new';
+
+    /** Возвращает значение (value) */
+    public function getValue(): string
     {
-        return $this->message;
+        return self::STATUS;
     }
 
-    /**
-     * Блок кнопок для отправили в Telegram
-     */
-    public function markup(): ?array
+    /** Сортировка (чем меньше число - тем первым в итерации будет значение) */
+    public static function sort(): int
     {
-        return null;
+        return 1;
     }
-
-    /**
-     * Класс следующего состояния
-     */
-    public function getNextStep(): string
-    {
-        return $this->nextStep;
-    }
-
 }

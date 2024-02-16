@@ -29,50 +29,42 @@ use BaksDev\Auth\Telegram\Entity\AccountTelegram;
 use BaksDev\Auth\Telegram\Entity\Event\AccountTelegramEvent;
 use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus;
 use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\AccountTelegramStatusActive;
-use Doctrine\DBAL\Connection;
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use Doctrine\DBAL\ParameterType;
 
 final class ExistAccountTelegram implements ExistAccountTelegramInterface
 {
-
-    private Connection $connection;
+    private DBALQueryBuilder $DBALQueryBuilder;
 
     public function __construct(
-        Connection $connection,
+        DBALQueryBuilder $DBALQueryBuilder,
     )
     {
-        $this->connection = $connection;
+        $this->DBALQueryBuilder = $DBALQueryBuilder;
     }
 
     /**
      * Метод проверяет, имеется ли зарегистрированный чат
      */
-    public function isExistAccountTelegram(int $chat): bool
+    public function isExistActive(string|int $chat): bool
     {
-        $qbExist = $this->connection->createQueryBuilder();
+        $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
-        $qbExist->select('1');
+        $dbal->from(AccountTelegramEvent::TABLE, 'event');
 
-        $qbExist->from(AccountTelegramEvent::TABLE, 'event');
-
-        $qbExist->join(
+        $dbal->join(
             'event',
             AccountTelegram::TABLE,
             'account',
             'account.event = event.id'
         );
 
-        $qbExist->where('event.chat = :chat');
-        $qbExist->setParameter('chat', $chat, ParameterType::INTEGER);
+        $dbal->where('event.chat = :chat');
+        $dbal->setParameter('chat', (string) $chat);
 
-        $qbExist->andWhere('event.status = :status');
-        $qbExist->setParameter('status', new AccountTelegramStatus(new AccountTelegramStatusActive()), AccountTelegramStatus::TYPE);
+        $dbal->andWhere('event.status = :status');
+        $dbal->setParameter('status', new AccountTelegramStatus(new AccountTelegramStatusActive()), AccountTelegramStatus::TYPE);
 
-
-        $qb = $this->connection->createQueryBuilder();
-        $qb->select(sprintf('EXISTS(%s)', $qbExist->getSQL()));
-        $qb->setParameters($qbExist->getParameters());
-
-        return $qb->fetchOne();
+        return $dbal->fetchExist();
     }
 }

@@ -45,7 +45,6 @@ final class AccountTelegramStatusListener
 
     public function onKernelController(ControllerEvent $event): void
     {
-        // Инициируем статусы заказов
         if(in_array(AccountTelegramStatusType::class, get_declared_classes(), true))
         {
             $this->collection->cases();

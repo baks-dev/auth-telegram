@@ -23,43 +23,26 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Auth\Telegram\Bot\Login\Email\Steps;
+namespace BaksDev\Auth\Telegram\Messenger\RegistrationEmail;
 
-use BaksDev\Auth\Telegram\Bot\Login\Email\LoginStep;
+use BaksDev\Auth\Telegram\Type\Event\AccountTelegramEventUid;
+use BaksDev\Telegram\Request\TelegramRequestInterface;
+use BaksDev\Users\User\Type\Id\UserUid;
 
-final class LoginStepSuccess extends LoginStep
+final class TelegramRegistrationEmailMessage
 {
-    private string $message = 'Вы успешно авторизованы';
+    private TelegramRequestInterface $telegramRequest;
 
-    public string $nextStep = LoginStepStart::class;
-
-    public function next(mixed $data): void
+    public function __construct(TelegramRequestInterface $telegramRequest)
     {
-        $this->context->transitionTo($this);
+        $this->telegramRequest = $telegramRequest;
     }
 
     /**
-     * Сообщение для отправили в Telegram
+     * TelegramRequest
      */
-    public function message(): ?string
+    public function getTelegramRequest(): TelegramRequestInterface
     {
-        return $this->message;
-    }
-
-    /**
-     * Блок кнопок для отправили в Telegram
-     */
-    public function markup(): ?array
-    {
-        return null;
-    }
-
-
-    /**
-     * Класс следующего состояния
-     */
-    public function getNextStep(): string
-    {
-        return $this->nextStep;
+        return $this->telegramRequest;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -23,41 +23,33 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Auth\Telegram\Bot\Login\Email\Steps;
+namespace BaksDev\Auth\Telegram\UseCase\Admin\Remove;
 
-use BaksDev\Auth\Telegram\Bot\Login\Email\LoginStep;
+use BaksDev\Users\User\Type\Id\UserUid;
+use Symfony\Component\Validator\Constraints as Assert;
 
-final class LoginStepAuth extends LoginStep
+/** @see AccountTelegramRemoveEvent */
+final class AccountTelegramRemoveDTO
 {
-    public string $nextStep = self::class;
 
-    public function next(mixed $data): void
-    {
-        $this->context->transitionTo($this);
+    /**
+     * Идентификатор пользователя
+     */
+    #[Assert\Uuid]
+    private UserUid $id;
+    private UserUid $usr;
+
+
+    public function __construct(UserUid $usr) {
+        $this->usr = $usr;
     }
 
     /**
-     * Сообщение для отправили в Telegram
+     * Usr
      */
-    public function message(): ?string
+    public function getUsr(): UserUid
     {
-        return null;
+        return $this->usr;
     }
 
-
-    /**
-     * Блок кнопок для отправили в Telegram
-     */
-    public function markup(): ?array
-    {
-        return null;
-    }
-
-    /**
-     * Класс следующего состояния
-     */
-    public function getNextStep(): string
-    {
-        return $this->nextStep;
-    }
 }

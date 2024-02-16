@@ -28,5 +28,5 @@ interface ExistAccountTelegramInterface
     /**
      * Метод проверяет, имеется ли зарегистрированный чат
      */
-    public function isExistAccountTelegram(int $chat): bool;
+    public function isExistActive(int $chat): bool;
 }

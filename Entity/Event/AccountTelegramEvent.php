@@ -40,7 +40,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'account_telegram_event')]
-#[ORM\Index(columns: ['chat', 'status'])]
+#[ORM\Index(columns: ['chat'])]
 class AccountTelegramEvent extends EntityEvent
 {
     public const TABLE = 'account_telegram_event';
@@ -122,7 +122,7 @@ class AccountTelegramEvent extends EntityEvent
      * Идентификатор UserUid
      */
 
-    public function setAccount(AccountTelegram|UserUid $account): void
+    public function setMain(AccountTelegram|UserUid $account): void
     {
         $this->account = $account instanceof AccountTelegram ? $account->getId() : $account;
     }
