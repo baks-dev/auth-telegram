@@ -1,0 +1,39 @@
+{# ---- ШАБЛОН ------------------------------------------------------------ #}
+{% extends '@Template/default/user/base.html.twig' %}
+
+{# ---- CSS ------------------------------------------------------------ #}
+{# {% block stylesheets %} #}
+{#    <link href="{{ path('user_posts_home_css') }}" rel="stylesheet"> #}
+{# {% endblock %} #}
+
+{# ---- HEADER-БЛОК ------------------------------------------------------------ #}
+{# {% block header %}
+    {{ include(_self|replace({ "template.html.twig": "header.html.twig" })) }}
+{% endblock %} #}
+
+
+{# ---- LEFT-БЛОК ------------------------------------------------------------ #}
+{# {% block left %} #}
+{#   {% include '@Template/flowers/left.html.twig' %} #}
+{# {% endblock %} #}
+
+
+{# ---- КОНТЕНТ-БЛОК ------------------------------------------------------------ #}
+{% block content %}
+	
+	{{ include(_self|replace({ "template.html.twig": "content.html.twig" })) }}
+	
+	{# CSS #}
+	{# <div style="display: none !important;" class="ms-3 dropdown-menu dropright w-400px menu-content d-flex align-items-center px-3 symbol symbol-50px me-5 symbol-circle symbol-label flex-column fw-bolder fs-5 text-dark badge badge-light-success  fs-8 px-2 py-1 ms-2 fw-bold text-muted text-hover-primary fs-7 dropdown-divider dropdown-item p-1 rounded bg-light  position-absolute end-0 me-2 px-4 float-start text-hover-dark"></div> #}
+{% endblock %}
+
+
+{# ---- FOOTER-БЛОК ------------------------------------------------------------ #}
+{# {% block footer %}
+    {{ include(_self|replace({ "template.html.twig": "footer.html.twig" })) }}
+{% endblock %} #}
+
+{# {% block javascript %} #}
+{# <script defer src="{{ path('user_posts_home_js') }}"></script> #}
+{# {% endblock %} #}
+

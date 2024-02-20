@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,14 +21,12 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Auth\Telegram\Repository\ActiveProfileByAccountTelegram;
+namespace BaksDev\Auth\Telegram\Repository\CurrentAccountTelegram;
 
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use BaksDev\Users\User\Type\Id\UserUid;
 
-interface ActiveProfileByAccountTelegramInterface
+interface CurrentAccountTelegramInterface
 {
-    /**
-     * Метод возвращает активный идентификатор пользователя идентификатора чата
-     */
-    public function findByChat(int|string $chat): ?UserProfileUid;
+    /** Метод возвращает информацию по пользователе Telegram */
+    public function findArrayByUser(UserUid|string $usr): array|bool;
 }

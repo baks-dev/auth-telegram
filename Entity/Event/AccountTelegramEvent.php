@@ -118,6 +118,12 @@ class AccountTelegramEvent extends EntityEvent
         return $this->id;
     }
 
+    public function setId(AccountTelegramEventUid $id): self
+    {
+        $this->id = $id;
+        return $this;
+    }
+
     /**
      * Идентификатор UserUid
      */

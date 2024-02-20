@@ -82,7 +82,6 @@ final class UserProfileByChat implements UserProfileByChatInterface
             'personal.event = profile.event'
         );
 
-
         $qb->where('chat_event.chat = :chat')
             ->setParameter('chat', $chat);
 

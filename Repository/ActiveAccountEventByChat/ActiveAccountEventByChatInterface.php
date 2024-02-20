@@ -23,12 +23,18 @@
 
 namespace BaksDev\Auth\Telegram\Repository\ActiveAccountEventByChat;
 
+use BaksDev\Auth\Telegram\Type\Event\AccountTelegramEventUid;
 use BaksDev\Users\User\Type\Id\UserUid;
 
 interface ActiveAccountEventByChatInterface
 {
     /**
-     * Метод возвращает активное событие пользователя идентификатора чата
+     * Метод возвращает идентификатор пользователя UserUid по идентификатору чата
      */
-    public function getActiveAccountOrNullResultByChat(int|string $chat): ?UserUid;
+    public function findByChat(int|string $chat): ?UserUid;
+
+    /**
+     * Метод возвращает идентификатор пользователя идентификатору события
+     */
+    public function findByEvent(AccountTelegramEventUid|string $event): ?UserUid;
 }

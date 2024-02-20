@@ -27,16 +27,23 @@ namespace BaksDev\Auth\Telegram\Security;
 
 use BaksDev\Auth\Telegram\Messenger\RegistrationEmail\TelegramRegistrationEmailMessage;
 use BaksDev\Auth\Telegram\Repository\ActiveAccountEventByChat\ActiveAccountEventByChatInterface;
+use BaksDev\Auth\Telegram\Type\Event\AccountTelegramEventUid;
+use BaksDev\Auth\Telegram\UseCase\User\Auth\TelegramAuthDTO;
+use BaksDev\Auth\Telegram\UseCase\User\Auth\TelegramAuthForm;
+use BaksDev\Core\Cache\AppCacheInterface;
 use BaksDev\Core\Messenger\MessageDispatchInterface;
 use BaksDev\Telegram\Bot\Repository\UsersTableTelegramSettings\GetTelegramBotSettingsInterface;
 use BaksDev\Telegram\Request\TelegramRequest;
 use BaksDev\Users\User\Repository\GetUserById\GetUserByIdInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
@@ -58,7 +65,7 @@ final class TelegramBotAuthenticator extends AbstractAuthenticator
         ActiveAccountEventByChatInterface $activeAccountEventByChat,
         GetUserByIdInterface $userById,
         LocaleSwitcher $localeSwitcher,
-        MessageDispatchInterface $messageDispatch
+        MessageDispatchInterface $messageDispatch,
     )
     {
         $this->telegramBotSettings = $telegramBotSettings;
@@ -71,17 +78,18 @@ final class TelegramBotAuthenticator extends AbstractAuthenticator
 
     public function supports(Request $request): ?bool
     {
+        /** Проверяем авторизацию телеграмм-бота */
         $this->telegramBotSettings->settings();
         return $this->telegramBotSettings->equalsSecret($request->headers->get('X-Telegram-Bot-Api-Secret-Token'));
     }
 
     public function authenticate(Request $request): Passport
     {
-        /** Получаем паспорт */
+        /** Получаем паспорт телеграм-бота */
         return new SelfValidatingPassport(
 
-            new UserBadge('telegram_bot_authenticator', function()
-            {
+            new UserBadge('telegram_bot_authenticator', function() {
+
                 $TelegramRequest = $this->telegramRequest->request();
 
                 if(!$TelegramRequest)
@@ -95,7 +103,7 @@ final class TelegramBotAuthenticator extends AbstractAuthenticator
                  */
 
                 $UserUid = $this->activeAccountEventByChat
-                    ->getActiveAccountOrNullResultByChat($TelegramRequest->getChatId());
+                    ->findByChat($TelegramRequest->getChatId());
 
                 if($UserUid === null)
                 {
@@ -118,12 +126,18 @@ final class TelegramBotAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        /** Отправляем сообщение для регистрации */
-        $this->messageDispatch->dispatch(
-            new TelegramRegistrationEmailMessage($this->telegramRequest->request()),
-            transport: 'auth-telegram'
-        );
+        if($this->telegramRequest->request())
+        {
+            /** Отправляем сообщение для регистрации */
+            $this->messageDispatch->dispatch(
+                new TelegramRegistrationEmailMessage($this->telegramRequest->request()),
+                transport: 'auth-telegram'
+            );
+        }
 
-        return new JsonResponse(['Authentication' => 'failure']);
+        return null;
+
+        /** Если принимаем запросы только от авторизованных пользователей */
+        // return new JsonResponse(['Authentication' => 'failure']);
     }
 }

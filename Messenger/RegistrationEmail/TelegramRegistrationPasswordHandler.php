@@ -53,7 +53,7 @@ final class TelegramRegistrationPasswordHandler
     private AccountTelegramHandler $accountTelegramHandler;
     private LoggerInterface $logger;
     private AccountTelegramStatusCollection $accountTelegramStatusCollection;
-    private CacheInterface $cache;
+    //private CacheInterface $cache;
 
 
     public function __construct(
@@ -65,7 +65,7 @@ final class TelegramRegistrationPasswordHandler
         AccountTelegramHandler $accountTelegramHandler,
         AccountTelegramRemoveHandler $accountTelegramRemoveHandler,
         AccountTelegramStatusCollection $accountTelegramStatusCollection,
-        AppCacheInterface $appCache
+        //AppCacheInterface $appCache
     )
     {
         $this->accountTelegramEvent = $accountTelegramEvent;
@@ -76,7 +76,7 @@ final class TelegramRegistrationPasswordHandler
         $this->accountTelegramHandler = $accountTelegramHandler;
         $this->logger = $authTelegramLogger;
         $this->accountTelegramStatusCollection = $accountTelegramStatusCollection;
-        $this->cache = $appCache->init('telegram');
+        //$this->cache = $appCache->init('telegram');
     }
 
     public function __invoke(TelegramRegistrationEmailMessage $message): void
@@ -146,15 +146,20 @@ final class TelegramRegistrationPasswordHandler
             /* Ошибка авторизации, удаляем аккаунт Telegram */
             $response = $this
                 ->sendMessage
+                ->delete([
+                    //$TelegramRequest->getLast(),
+                    $TelegramRequest->getSystem(),
+                    $TelegramRequest->getId(),
+                ])
                 ->chanel($TelegramRequest->getChatId())
                 ->message('Ошибка авторизации! Повторная попытка через 30 сек...')
                 ->send();
 
-            /** Сохраняем идентификатор системного сообщения */
-            if(isset($response['result']['message_id']))
-            {
-                $this->saveSystemMessage($TelegramRequest->getChatId(), $response['result']['message_id']);
-            }
+//            /** Сохраняем идентификатор системного сообщения */
+//            if(isset($response['result']['message_id']))
+//            {
+//                $this->saveSystemMessage($TelegramRequest->getChatId(), $response['result']['message_id']);
+//            }
 
             $AccountTelegramRemoveDTO = new AccountTelegramRemoveDTO($AccountTelegramEvent->getAccount());
             $this->accountTelegramRemoveHandler->handle($AccountTelegramRemoveDTO);
@@ -170,16 +175,21 @@ final class TelegramRegistrationPasswordHandler
 
         $this
             ->sendMessage
+            ->delete([
+                $TelegramRequest->getLast(),
+                $TelegramRequest->getSystem(),
+                $TelegramRequest->getId(),
+            ])
             ->chanel($TelegramRequest->getChatId())
             ->message('Вы успешно авторизованы')
             ->send();
     }
 
-    private function saveSystemMessage(int $chat, int $id): void
-    {
-        $systemItem = $this->cache->getItem('system-'.$chat);
-        $systemItem->set($id);
-        $this->cache->save($systemItem);
-    }
+//    private function saveSystemMessage(int $chat, int $id): void
+//    {
+//        $systemItem = $this->cache->getItem('system-'.$chat);
+//        $systemItem->set($id);
+//        $this->cache->save($systemItem);
+//    }
 }
 

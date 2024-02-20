@@ -50,7 +50,7 @@ final class ActiveProfileByAccountTelegram implements ActiveProfileByAccountTele
      * Метод возвращает активный идентификатор пользователя идентификатора чата
      */
 
-    public function getActiveProfileUidOrNullResultByChat(string $chat): ?UserProfileUid
+    public function findByChat(int|string $chat): ?UserProfileUid
     {
         $qb = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
@@ -58,7 +58,7 @@ final class ActiveProfileByAccountTelegram implements ActiveProfileByAccountTele
         $qb->from(AccountTelegramEvent::TABLE, 'telegram_event');
 
         $qb->where('telegram_event.chat = :chat');
-        $qb->setParameter('chat', $chat);
+        $qb->setParameter('chat', (string) $chat);
 
         $qb->andWhere('telegram_event.status = :telegram_status');
         $qb->setParameter(

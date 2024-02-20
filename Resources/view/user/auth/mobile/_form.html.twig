@@ -1,0 +1,57 @@
+{% trans_default_domain 'user.login' %}
+
+
+{{ form_start(form, { attr: { class: 'd-flex flex-column align-items-end p-4 border shadow rounded-3 w-100' } }) }}
+
+	
+	
+	<div class="d-flex flex-column gap-4 w-100 small">
+		
+		<div class="w-100 d-flex flex-column gap-2">
+			<label for="login-email">Электронная почта:</label>
+			{{ form_widget(form.email, {
+				label: 'user.form.label.email'
+			}) }}
+		</div>
+		
+		<div class="w-100 d-flex flex-column gap-2">
+			
+			<div class="d-flex justify-content-between gap-5 ">
+				{{ form_label(form.password, 'user.form.label.password', { attr: { tabindex : "-1" } }) }}
+				
+				
+				
+				<a href="{{ path('auth-email:user.restore') }}" class="small"
+						aria-label="{{ 'user.form.label.question'|trans({}, 'user.restore') }}"
+						title="{{ 'user.form.label.question'|trans({}, 'user.restore') }}"
+						tabindex="-1"
+				>
+					{{ 'user.form.label.question'|trans({}, 'user.restore') }}
+				</a>
+				
+			</div>
+			
+			{{ form_widget(form.password) }}
+		</div>
+		
+		<div class="w-100">
+			{{ form_row(form.login, {
+				label: '<span>'~ 'user.btn.save'|trans() ~'</span>
+				<span id="'~form.login.vars.id~'-progress" class="spinner-border spinner-border-sm d-none"></span>
+			',
+				attr: { class : 'btn btn-lg btn-danger w-100 rounded-3 small text-uppercase fw-bolder' }
+			}) }}
+		</div>
+	
+	</div>
+
+{{ form_end(form) }}
+
+
+
+
+
+
+
+
+

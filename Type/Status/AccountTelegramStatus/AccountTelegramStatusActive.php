@@ -28,6 +28,9 @@ namespace BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus;
 use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\Collection\AccountTelegramStatusInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
+/**
+ * Статус ACTIVE «Активный»
+ */
 #[AutoconfigureTag('baks.account.telegram.status')]
 class AccountTelegramStatusActive implements AccountTelegramStatusInterface
 {

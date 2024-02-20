@@ -23,31 +23,36 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus;
+namespace BaksDev\Auth\Telegram\Decorator\UserProfile;
 
-use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\Collection\AccountTelegramStatusInterface;
+use BaksDev\Auth\Email\Repository\CurrentUserAccount\CurrentUserAccountInterface;
+use BaksDev\Auth\Telegram\Repository\CurrentAccountTelegram\CurrentAccountTelegramInterface;
+use BaksDev\Users\User\Decorator\UserProfile\UserProfileInterface;
+use BaksDev\Users\User\Type\Id\UserUid;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
-/**
- * Статус BLOCK «Заблокирован»
- */
-#[AutoconfigureTag('baks.account.telegram.status')]
-class AccountTelegramStatusBlock implements AccountTelegramStatusInterface
+/** Идентификатор профиля пользователя */
+#[AutoconfigureTag('baks.user.profile')]
+final class UserProfileUsername implements UserProfileInterface
 {
-    /**
-     * Статус "Заблокирован"
-     */
-    public const STATUS = 'block';
+    public const KEY = 'user_profile_username';
+    private CurrentAccountTelegramInterface $currentAccountTelegram;
 
-    /** Возвращает значение (value) */
-    public function getValue(): string
+
+    public function __construct(CurrentAccountTelegramInterface $currentAccountTelegram)
     {
-        return self::STATUS;
+        $this->currentAccountTelegram = $currentAccountTelegram;
     }
 
-    /** Сортировка (чем меньше число - тем первым в итерации будет значение) */
-    public static function sort(): int
+    /** Возвращает значение (value) */
+    public function getValue(UserUid $usr): mixed
     {
-        return 200;
+        $current = $this->currentAccountTelegram->findArrayByUser($usr);
+        return $current['telegram_firstname'] ?? false;
+    }
+
+    public static function priority(): int
+    {
+        return 810;
     }
 }

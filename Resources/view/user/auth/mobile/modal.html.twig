@@ -1,0 +1,51 @@
+{% trans_default_domain 'user.login' %}
+
+<div class="modal-dialog modal-dialog-centered p-3" style="--bs-modal-width: 700px;">
+	
+	
+	<div class="modal-content p-3 border-bottom border-5 border-primary">
+		{{ form_start(form) }}
+		<div class="modal-header border-0">
+			<h3 class="modal-title text-uppercase h4 fw-bold">Авторизуйтесь</h3>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+		</div>
+		
+		<div class="modal-body">
+			
+				<div class="w-100">
+					{{ form_label(form.email, 'user.form.label.email', { attr: { class: 'mb-0' } }) }}
+					{{ form_widget(form.email, { attr : { class: 'rounded-4' } }) }}
+				</div>
+				<div class="w-100">
+					{{ form_label(form.password, 'user.form.label.password', { attr: { tabindex : "-1", class: 'mb-0' } }) }}
+					{{ form_widget(form.password, { attr : { class: 'rounded-4' } }) }}
+				</div>
+			
+		</div>
+		
+		<div class="modal-footer border-0 d-flex ">
+			
+			<ul class="list-unstyled">
+				<li>
+					<a href="{{ path('auth-email:user.registration') }}"
+							aria-label="Регистация"> {{ 'user.page'|trans({}, 'user.reg') }}</a>
+				</li>
+				<li>
+					<a href="{{ path('auth-email:user.restore') }}"
+							aria-label="Забыли пароль?">{{ 'user.form.label.question'|trans({}, 'user.restore') }}  </a>
+				</li>
+			</ul>
+			
+			{# <button type="submit" class="btn btn-danger btn-lg ms-auto ">Войти</button> #}
+			
+			{{ form_widget(form.login, {
+				label: '<span>'~ 'user.btn.save'|trans() ~'</span>
+                            <span id="'~form.login.vars.id~'-progress" class="spinner-border spinner-border-sm d-none"></span>
+                        ',
+				attr: { class : 'btn btn-lg btn-danger rounded-3 small text-uppercase fw-bolder ms-auto' }
+			}) }}
+		
+		</div>
+		{{ form_end(form) }}
+	</div>
+</div>

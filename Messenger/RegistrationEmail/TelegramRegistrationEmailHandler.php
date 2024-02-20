@@ -49,7 +49,7 @@ final class TelegramRegistrationEmailHandler
     private TelegramDeleteMessage $deleteMessage;
     private LoggerInterface $logger;
     private AccountTelegramStatusCollection $accountTelegramStatusCollection;
-    private CacheInterface $cache;
+    //private CacheInterface $cache;
 
     public function __construct(
         LoggerInterface $authTelegramLogger,
@@ -59,7 +59,7 @@ final class TelegramRegistrationEmailHandler
         AccountEventActiveByEmailInterface $accountEventActiveByEmail,
         AccountTelegramHandler $accountTelegramHandler,
         AccountTelegramStatusCollection $accountTelegramStatusCollection,
-        AppCacheInterface $appCache
+        //AppCacheInterface $appCache
     )
     {
         $this->accountTelegramEvent = $accountTelegramEvent;
@@ -69,7 +69,7 @@ final class TelegramRegistrationEmailHandler
         $this->deleteMessage = $deleteMessage;
         $this->logger = $authTelegramLogger;
         $this->accountTelegramStatusCollection = $accountTelegramStatusCollection;
-        $this->cache = $appCache->init('telegram');
+        //$this->cache = $appCache->init('telegram');
     }
 
     public function __invoke(TelegramRegistrationEmailMessage $message): void
@@ -88,28 +88,28 @@ final class TelegramRegistrationEmailHandler
         }
 
         /** При регистрации всегда удаляем сообщение пользователя из чата */
-        $this->deleteMessage
-            ->chanel($TelegramRequest->getChatId())
-            ->delete($TelegramRequest->getId())
-            ->send();
+//        $this->deleteMessage
+//            ->chanel($TelegramRequest->getChatId())
+//            ->delete($TelegramRequest->getId())
+//            ->send();
 
-        /** Удаляем предыдущее сообщение */
-        if($TelegramRequest->getLast())
-        {
-            $this->deleteMessage
-                ->chanel($TelegramRequest->getChatId())
-                ->delete($TelegramRequest->getLast())
-                ->send();
-        }
+//        /** Удаляем предыдущее сообщение */
+//        if($TelegramRequest->getLast())
+//        {
+//            $this->deleteMessage
+//                ->chanel($TelegramRequest->getChatId())
+//                ->delete($TelegramRequest->getLast())
+//                ->send();
+//        }
 
-        /** Удаляем предыдущее системное сообщение */
-        if($TelegramRequest->getSystem())
-        {
-            $this->deleteMessage
-                ->chanel($TelegramRequest->getChatId())
-                ->delete($TelegramRequest->getSystem())
-                ->send();
-        }
+//        /** Удаляем предыдущее системное сообщение */
+//        if($TelegramRequest->getSystem())
+//        {
+//            $this->deleteMessage
+//                ->chanel($TelegramRequest->getChatId())
+//                ->delete($TelegramRequest->getSystem())
+//                ->send();
+//        }
 
         $this->accountTelegramStatusCollection->cases();
 
@@ -153,15 +153,20 @@ final class TelegramRegistrationEmailHandler
 
             $response = $this
                 ->sendMessage
+                ->delete([
+                    $TelegramRequest->getLast(),
+                    $TelegramRequest->getSystem(),
+                    $TelegramRequest->getId(),
+                ])
                 ->chanel($TelegramRequest->getChatId())
                 ->message('Ведите свой пароль')
                 ->send();
 
-            /** Сохраняем идентификатор системного сообщения */
-            if(isset($response['result']['message_id']))
-            {
-                $this->saveSystemMessage($TelegramRequest->getChatId(), $response['result']['message_id']);
-            }
+//            /** Сохраняем идентификатор системного сообщения */
+//            if(isset($response['result']['message_id']))
+//            {
+//                $this->saveSystemMessage($TelegramRequest->getChatId(), $response['result']['message_id']);
+//            }
 
 
             $this->logger->info('Добавили AccountTelegram с указанным Email для ввода пароля', [__FILE__.':'.__LINE__, $TelegramRequest->getText()]);
@@ -170,25 +175,30 @@ final class TelegramRegistrationEmailHandler
 
         $response = $this
             ->sendMessage
+            ->delete([
+                $TelegramRequest->getLast(),
+                $TelegramRequest->getSystem(),
+                $TelegramRequest->getId(),
+            ])
             ->chanel($TelegramRequest->getChatId())
             ->message('Отправьте свой E-mail, с которого Вы регистрировались')
             ->send();
 
-        /** Сохраняем идентификатор системного сообщения */
-        if(isset($response['result']['message_id']))
-        {
-            $this->saveSystemMessage($TelegramRequest->getChatId(), $response['result']['message_id']);
-        }
+//        /** Сохраняем идентификатор системного сообщения */
+//        if(isset($response['result']['message_id']))
+//        {
+//            $this->saveSystemMessage($TelegramRequest->getChatId(), $response['result']['message_id']);
+//        }
 
         $this->logger->info('Отправили сообщение с требованием E-mail', [__FILE__.':'.__LINE__, $TelegramRequest->getText()]);
     }
 
-    private function saveSystemMessage(int $chat, int $id): void
-    {
-        $systemItem = $this->cache->getItem('system-'.$chat);
-        $systemItem->set($id);
-        $this->cache->save($systemItem);
-    }
+//    private function saveSystemMessage(int $chat, int $id): void
+//    {
+//        $systemItem = $this->cache->getItem('system-'.$chat);
+//        $systemItem->set($id);
+//        $this->cache->save($systemItem);
+//    }
 
 }
 

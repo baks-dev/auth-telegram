@@ -23,73 +23,52 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Auth\Telegram\Repository\AccountTelegramEvent;
+namespace BaksDev\Auth\Telegram\Repository\CurrentAccountTelegram;
 
 use BaksDev\Auth\Telegram\Entity\AccountTelegram;
 use BaksDev\Auth\Telegram\Entity\Event\AccountTelegramEvent;
-use BaksDev\Core\Doctrine\ORMQueryBuilder;
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Users\User\Type\Id\UserUid;
 
-final class AccountTelegramEventRepository implements AccountTelegramEventInterface
+final class CurrentAccountTelegram implements CurrentAccountTelegramInterface
 {
-    private ORMQueryBuilder $ORMQueryBuilder;
+    private DBALQueryBuilder $DBALQueryBuilder;
 
-    public function __construct(ORMQueryBuilder $ORMQueryBuilder)
+    public function __construct(
+        DBALQueryBuilder $DBALQueryBuilder,
+    )
     {
-        $this->ORMQueryBuilder = $ORMQueryBuilder;
+        $this->DBALQueryBuilder = $DBALQueryBuilder;
     }
 
-    /**
-     * Метод получает активное событие по идентификатору чата
-     */
-    public function findByChat(int|string $chat): ?AccountTelegramEvent
-    {
-        $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class);
-
-        $qb
-            ->select('event')
-            ->from(AccountTelegramEvent::class, 'event')
-            ->where('event.chat = :chat')
-            ->setParameter('chat', (string) $chat);
-
-        $qb->join(
-            AccountTelegram::class,
-            'main',
-            'WITH',
-            'main.event = event.id'
-        );
-
-        return $qb->enableCache('auth-telegram', 86400)->getOneOrNullResult();
-    }
-
-    /**
-     * Метод получает активное событие по идентификатору пользователя
-     */
-    public function findByUser(UserUid|string $usr): ?AccountTelegramEvent
+    /** Метод возвращает информацию по пользователе Telegram */
+    public function findArrayByUser(UserUid|string $usr): array|bool
     {
         if(is_string($usr))
         {
             $usr = new UserUid($usr);
         }
 
-        $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class);
+        $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
-        $qb
+        $dbal
             ->from(AccountTelegram::class, 'main')
             ->where('main.id = :usr')
             ->setParameter('usr', $usr, UserUid::TYPE);
 
-        $qb
-            ->select('event')
+        $dbal
+            ->addSelect('event.chat AS telegram_id')
+            ->addSelect('event.username AS telegram_username')
+            ->addSelect('event.firstname AS telegram_firstname')
             ->join(
+                'main',
                 AccountTelegramEvent::class,
                 'event',
-                'WITH',
                 'event.id = main.event'
             );
 
-        return $qb->enableCache('auth-telegram', 86400)->getOneOrNullResult();
+        return $dbal
+            ->enableCache('auth-telegram', 86400)
+            ->fetchAssociative();
     }
-
-
 }

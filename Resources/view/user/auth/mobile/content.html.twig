@@ -1,0 +1,42 @@
+{% trans_default_domain 'user.login' %}
+
+<main class="main d-print-none">
+	
+	<div class="mt-3">
+		{# {{ include(_self|replace({ "content.html.twig": "breadcrumb.html.twig" })) }} #}
+	</div>
+	
+	<div class="container d-flex flex-column justify-content-center w-100 my-5 pb-3">
+		
+		{# <div class="w-75 d-flex position-relative">
+			<img data-src="/assets/login/img/login.webp" src="/assets/img/empty.webp"
+				 class="lazy position-absolute start-0 ms-2"
+				 alt="..." width="500"
+			>
+		</div> #}
+		
+		<div class="d-flex gap-3 mb-4 align-items-end small">
+			<h3 class="modal-title text-uppercase h4 fw-bold w-75">
+				{{ 'user.page'|trans }}
+			</h3>
+			
+			<a href="{{ path('auth-email:user.registration') }}" class="small py-1"
+					aria-label="{{ 'user.page'|trans({}, 'user.reg') }}"
+					title="{{ 'user.page'|trans({}, 'user.reg') }}"
+			>
+				{{ 'user.page'|trans({}, 'user.reg') }}
+			</a>
+		</div>
+		
+		
+		<div class="w-100">
+			
+			{{ include(_self|replace({ "content.html.twig": "_form.html.twig" })) }}
+		
+		</div>
+	
+	</div>
+
+</main>
+
+

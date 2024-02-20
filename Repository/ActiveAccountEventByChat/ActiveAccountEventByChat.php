@@ -25,8 +25,12 @@ declare(strict_types=1);
 
 namespace BaksDev\Auth\Telegram\Repository\ActiveAccountEventByChat;
 
+use BaksDev\Auth\Telegram\Entity\AccountTelegram;
 use BaksDev\Auth\Telegram\Entity\Event\AccountTelegramEvent;
+use BaksDev\Auth\Telegram\Type\Event\AccountTelegramEventUid;
 use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus;
+use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\AccountTelegramStatusBlock;
+use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\AccountTelegramStatusActive;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Users\Profile\UserProfile\Entity\Info\UserProfileInfo;
 use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
@@ -48,41 +52,53 @@ final class ActiveAccountEventByChat implements ActiveAccountEventByChatInterfac
     /**
      * Метод возвращает идентификатор пользователя UserUid по идентификатору чата
      */
-    public function getActiveAccountOrNullResultByChat(int|string $chat): ?UserUid
+    public function findByChat(int|string $chat): ?UserUid
     {
+
+        $chat = (string) $chat;
+
         $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
         $dbal
-            ->select('telegram_event.account')
-            ->from(AccountTelegramEvent::TABLE, 'telegram_event');
+            ->select('event.account')
+            ->from(AccountTelegramEvent::class, 'event');
 
-        $dbal->where('telegram_event.chat = :chat')
-            ->setParameter('chat', (string) $chat);
+        $dbal->where('event.chat = :chat')
+            ->setParameter('chat', $chat);
 
-        $dbal->andWhere('telegram_event.status = :telegram_status')
+        $dbal
+            ->andWhere('event.status = :telegram_status')
             ->setParameter(
                 'telegram_status',
-                new AccountTelegramStatus(new AccountTelegramStatus\AccountTelegramStatusActive()),
+                new AccountTelegramStatus(AccountTelegramStatusActive::class),
                 AccountTelegramStatus::TYPE);
 
+        $dbal->join(
+            'event',
+            AccountTelegram::class,
+            'main',
+            'main.event = event.id'
+        );
 
         $exist = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
-        $exist->select('1');
-        $exist->from(UserProfileInfo::TABLE, 'profile_info');
-        $exist->where('profile_info.usr = telegram_event.account');
+        $exist->select('profile_info.profile');
+        $exist->from(UserProfileInfo::class, 'profile_info');
+        $exist->where('profile_info.usr = event.account');
         $exist->andWhere('profile_info.status = :profile_status');
         $exist->andWhere('profile_info.active = true');
 
         $exist->join(
             'profile_info',
-            UserProfile::TABLE,
+            UserProfile::class,
             'profile',
             'profile.id = profile_info.profile');
+
 
         $dbal->setParameter('profile_status',
             new UserProfileStatus(UserProfileStatusActive::class),
             UserProfileStatus::TYPE);
+
 
         $dbal->andWhere('EXISTS('.$exist->getSQL().')');
 
@@ -90,4 +106,66 @@ final class ActiveAccountEventByChat implements ActiveAccountEventByChatInterfac
 
         return $result ? new UserUid($result) : null;
     }
+
+
+    /**
+     * Метод возвращает идентификатор пользователя по активному идентификатору события
+     */
+    public function findByEvent(AccountTelegramEventUid|string $event): ?UserUid
+    {
+        if(is_string($event))
+        {
+            $event = new AccountTelegramEventUid($event);
+        }
+
+        $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class);
+
+        $dbal
+            ->select('event.account')
+            ->from(AccountTelegramEvent::class, 'event');
+
+        $dbal->where('event.id = :event')
+            ->setParameter('event', $event, AccountTelegramEventUid::TYPE);
+
+        $dbal->andWhere('event.status != :telegram_status')
+            ->setParameter(
+                'telegram_status',
+                new AccountTelegramStatus(new AccountTelegramStatusBlock()),
+                AccountTelegramStatus::TYPE);
+
+        $dbal->join(
+            'event',
+            AccountTelegram::class,
+            'main',
+            'main.event = event.id'
+        );
+
+        /**  Проверяем, что имеется активный профиль */
+//        $exist = $this->DBALQueryBuilder->createQueryBuilder(self::class);
+//
+//        $exist->select('1');
+//        $exist->from(UserProfileInfo::class, 'profile_info');
+//        $exist->where('profile_info.usr = event.account');
+//        $exist->andWhere('profile_info.status = :profile_status');
+//        $exist->andWhere('profile_info.active = true');
+//
+//        $exist->join(
+//            'profile_info',
+//            UserProfile::class,
+//            'profile',
+//            'profile.id = profile_info.profile');
+//
+//
+//        $dbal->setParameter('profile_status',
+//            new UserProfileStatus(new UserProfileStatusActive()),
+//            UserProfileStatus::TYPE);
+//
+//        $dbal->andWhere('EXISTS('.$exist->getSQL().')');
+
+
+        $result = $dbal->enableCache('auth-telegram', 3600)->fetchOne();
+
+        return $result ? new UserUid($result) : null;
+    }
+
 }
