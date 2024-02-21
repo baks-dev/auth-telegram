@@ -2,4 +2,4 @@
 
 {{ include(_self|replace({ "content.html.twig" : baks_settings.device~"/modal.html.twig" })) }}
 
-
+<script async nonce="{{ csp_nonce() }}" data-src="/assets/auth-telegram/timer.min.js?v={{ version }}" class="lazy"></script>

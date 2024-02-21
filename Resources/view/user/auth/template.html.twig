@@ -9,36 +9,5 @@
 {% endblock %}
 
 {% block javascript %}
-<script nonce='{{ csp_nonce() }}'>
-
-document.addEventListener("DOMContentLoaded", () => {
-    const second = document.getElementById('second');
-
-    // Функция для обновления обратного отсчета
-    function updateCountdown() {
-        // Уменьшаем счетчик на секунду
-        const countdownSeconds = (second.innerText)--;
-
-        if (countdownSeconds < 12)
-            {
-                second.classList.add('text-danger');
-            }
-
-        // Проверяем, если время вышло, то останавливаем обратный отсчет
-        if (countdownSeconds > 0)
-        {
-            return;
-        }
-
-        clearInterval(intervalId);
-        second.innerText = 'Время истекло!';
-    }
-
-    // Обновляем счетчик каждую секунду
-    const intervalId = setInterval(updateCountdown, 1000);
-
-  });
-
-</script>
-
+<script async nonce="{{ csp_nonce() }}" data-src="/assets/auth-telegram/timer.min.js?v={{ version }}" class="lazy"></script>
 {% endblock %}
