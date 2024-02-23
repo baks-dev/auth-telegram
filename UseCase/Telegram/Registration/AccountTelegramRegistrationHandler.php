@@ -68,6 +68,7 @@ final class AccountTelegramRegistrationHandler extends AbstractHandler
 
         $this->entityManager->persist($User);
 
+
         $this->entityManager->flush();
 
         /* Отправляем сообщение в шину */

@@ -48,20 +48,25 @@ use BaksDev\Telegram\Request\TelegramRequest;
 use BaksDev\Telegram\Request\Type\TelegramRequestCallback;
 use BaksDev\Telegram\Request\Type\TelegramRequestIdentifier;
 use BaksDev\Telegram\Request\Type\TelegramRequestMessage;
+use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
 use Psr\Cache\CacheItemInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
-#[AsMessageHandler(priority: 0)]
+#[AsMessageHandler(priority: 1)]
 final class TelegramRegistrationHandler
 {
     private LoggerInterface $logger;
     private AppCacheInterface $cache;
     private AccountTelegramEventInterface $accountTelegramEvent;
     private AccountTelegramRegistrationHandler $telegramRegistrationHandler;
+    private TelegramSendMessage $telegramSendMessage;
+    private UrlGeneratorInterface $urlGenerator;
 
 
     public function __construct(
@@ -69,12 +74,16 @@ final class TelegramRegistrationHandler
         AccountTelegramEventInterface $accountTelegramEvent,
         AccountTelegramRegistrationHandler $telegramRegistrationHandler,
         AppCacheInterface $appCache,
+        TelegramSendMessage $telegramSendMessage,
+        UrlGeneratorInterface $urlGenerator
     )
     {
         $this->logger = $authTelegramLogger;
         $this->cache = $appCache;
         $this->accountTelegramEvent = $accountTelegramEvent;
         $this->telegramRegistrationHandler = $telegramRegistrationHandler;
+        $this->telegramSendMessage = $telegramSendMessage;
+        $this->urlGenerator = $urlGenerator;
     }
 
     /**
@@ -121,6 +130,32 @@ final class TelegramRegistrationHandler
             ->setFirstname($TelegramRequest->getUser()->getFirstName());
 
         $this->telegramRegistrationHandler->handle($AccountTelegramRegistrationDTO);
+
+
+        /* Отправляем сообщение пользователю для заполнения профиля */
+
+        $message = '<b>Регистрация нового пользователя</b>';
+        $message .= PHP_EOL;
+        $message .= PHP_EOL;
+        $message .= 'После проверки проверочного кода и авторизации ОБЯЗАТЕЛЬНО необходимо заполнить свой профиль для дальнейшей работы: ';
+        $message .= PHP_EOL;
+
+        $menu[] = [
+            'text' => 'Добавить профиль',
+            'url' => $this->urlGenerator->generate('users-profile-user:user.index', referenceType: UrlGenerator::ABSOLUTE_URL)
+        ];
+
+        $markup = json_encode([
+            'inline_keyboard' => array_chunk($menu, 1),
+        ]);
+
+        $this
+            ->telegramSendMessage
+            ->chanel($TelegramRequest->getChatId())
+            ->markup($markup)
+            ->message($message)
+            ->send();
+
 
         $this->logger->info('Добавили нового пользователя AccountTelegram', [
             __FILE__.':'.__LINE__,

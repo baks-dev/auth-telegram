@@ -53,10 +53,9 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
-#[AsMessageHandler(priority: 1)]
+#[AsMessageHandler(priority: 0)]
 final class TelegramAuthenticatorHandler
 {
-
     private LoggerInterface $logger;
     private TelegramSendMessage $telegramSendMessage;
     private AppCacheInterface $cache;
@@ -112,6 +111,10 @@ final class TelegramAuthenticatorHandler
             return;
         }
 
+        $this
+            ->telegramSendMessage
+            ->chanel($TelegramRequest->getChatId());
+
         $AccountTelegramEvent = $this->accountTelegramEvent->findByChat($TelegramRequest->getChatId());
 
         if(!$AccountTelegramEvent)
@@ -129,6 +132,8 @@ final class TelegramAuthenticatorHandler
                 __FILE__.':'.__LINE__,
                 'chat' => $TelegramRequest->getChatId()
             ]);
+
+            return;
         }
 
         $AccountTelegramEventUid = new AccountTelegramEventUid($TelegramRequest->getIdentifier());
@@ -177,9 +182,6 @@ final class TelegramAuthenticatorHandler
 
 
         /* Отправляем проверочный код в сообщении пользователю  */
-        $this
-            ->telegramSendMessage
-            ->chanel($TelegramRequest->getChatId());
 
         $message = 'НИКОМУ не сообщайте!';
         $message .= PHP_EOL;
@@ -193,6 +195,7 @@ final class TelegramAuthenticatorHandler
                 $TelegramRequest->getLast(),
                 $TelegramRequest->getId(),
             ])
+            ->markup(null)
             ->message($message)
             ->send();
 

@@ -71,37 +71,6 @@ final class AuthController extends AbstractController
         $code = $Session->get($key);
 
 
-        //dd($form->isSubmitted());
-
-        //        if($form->isSubmitted() && $form->isValid() && $form->has('telegram_auth'))
-        //        {
-        //            if(!$code || $code['lifetime'] < time() || $code['code'] !== $TelegramAuthDTO->getCode())
-        //            {
-        //                $this->addFlash
-        //                (
-        //                    'page.index',
-        //                    'danger.code',
-        //                    'auth-telegram.user'
-        //                );
-        //
-        //                return $this->redirectToReferer();
-        //            }
-        //
-        //            /** Удаляем проверочный код */
-        //            $Session->invalidate();
-        //            $cache->delete((string) $code['code']);
-        //
-        //            $this->addFlash
-        //            (
-        //                'page.index',
-        //                'success.code',
-        //                'auth-telegram.user'
-        //            );
-        //
-        //            return $this->redirectToReferer();
-        //        }
-
-
         if(!$code || $code['lifetime'] < time())
         {
             $Session->invalidate();
@@ -124,29 +93,6 @@ final class AuthController extends AbstractController
 
             $code = $Session->get($key);
         }
-
-
-        ///** @var ApcuAdapter $cache */
-
-        //$cache = $appCache->init($request->getClientIp());
-        //$cacheItem = $cache->getItem($request->getClientIp());
-
-
-        //$cacheItem = $cache->get($request->getClientIp());
-
-
-        // Фильтр
-        // $filter = new ProductsStocksFilterDTO($request, $ROLE_ADMIN ? null : $this->getProfileUid());
-        // $filterForm = $this->createForm(ProductsStocksFilterForm::class, $filter);
-        // $filterForm->handleRequest($request);
-
-        // Получаем список
-        //$TelegtamAccount = $allTelegtamAccount->fetchAllTelegtamAccountAssociative($search);
-
-
-        //        $cacheItem = $cache->getItem($code['qr']);
-        //        dump($cacheItem->get());
-               dump($code);
 
         return $this->render(
             [
