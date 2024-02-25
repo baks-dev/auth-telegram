@@ -1,0 +1,23 @@
+page:
+  index: 'Telegram accounts of users'
+  new: 'Add User Telegram Account'
+  edit: 'Edit User Telegram Account'
+  delete: 'Delete Users Telegram Account'
+
+breadcrumb:
+  index: 'Telegram accounts of users'
+  new: 'Add User Telegram Account'
+  edit: 'Edit User Telegram Account'
+  delete: 'Delete Users Telegram Account'
+
+success:
+  new: 'Users Telegram account added successfully'
+  update: 'Users Telegram account updated successfully'
+  delete: 'Users Telegram account has been successfully deleted to trash'
+  restore: 'Users Telegram account successfully restored'
+
+danger:
+  new: '%s: Error adding user Telegram account'
+  update: '%s: Error updating user Telegram account'
+  delete: '%s: Error deleting users Telegram account'
+  restore: '%s: Error restoring users Telegram account'

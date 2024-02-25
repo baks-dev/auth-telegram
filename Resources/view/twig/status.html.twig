@@ -1,0 +1,18 @@
+{% trans_default_domain 'auth-telegram.status' %}
+
+{% if status == 'active' %}
+	<div class="badge text-bg-success">
+		{{ 'active'|trans }}
+	</div>
+
+{% elseif status == 'new' %}
+	<div class="badge text-bg-info">
+		{{ 'new'|trans }}
+	</div>
+
+{% elseif status == 'block' %}
+	<div class="badge text-bg-danger">
+		{{ 'block'|trans }}
+	</div>
+
+{% endif %}

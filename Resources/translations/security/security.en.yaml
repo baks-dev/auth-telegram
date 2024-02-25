@@ -1,0 +1,15 @@
+ROLE_ACCOUNT_TELEGRAM:
+  name: 'Telegram accounts'
+  desc: 'List of registered Telegram users'
+
+ROLE_ACCOUNT_TELEGRAM_INDEX:
+  name: 'View'
+  desc: ''
+
+ROLE_ACCOUNT_TELEGRAM_EDIT:
+  name: 'Edit'
+  desc: ''
+
+ROLE_ACCOUNT_TELEGRAM_DELETE:
+  name: 'Delete'
+  desc: ''

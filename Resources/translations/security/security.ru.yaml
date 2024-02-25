@@ -1,0 +1,16 @@
+
+ROLE_ACCOUNT_TELEGRAM:
+  name: 'Telegram аккаунты'
+  desc: 'Список зрегистрированных пользователей Telegram'
+
+ROLE_ACCOUNT_TELEGRAM_INDEX:
+  name: 'Просмотр'
+  desc: ''
+
+ROLE_ACCOUNT_TELEGRAM_EDIT:
+  name: 'Редактировать'
+  desc: ''
+
+ROLE_ACCOUNT_TELEGRAM_DELETE:
+  name: 'Удалить'
+  desc: ''
