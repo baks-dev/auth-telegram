@@ -143,7 +143,7 @@ class AccountTelegramEvent extends EntityEvent
      */
     public function getUsername(): string
     {
-        return $this->username;
+        return $this->firstname ?: $this->username;
     }
 
 

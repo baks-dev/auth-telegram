@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -25,29 +25,28 @@ declare(strict_types=1);
 
 namespace BaksDev\Auth\Telegram\Controller\Admin;
 
-use BaksDev\Core\Controller\AbstractController;
+
+use BaksDev\Auth\Telegram\Repository\AllAccountTelegram\AllAccountTelegramInterface;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Form\Search\SearchForm;
-use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Attribute\AsController;
+use BaksDev\Core\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
 #[RoleSecurity('ROLE_ACCOUNT_TELEGRAM')]
 final class IndexController extends AbstractController
 {
-    /**
-     * Аккаунты авторизации Telegram
-     */
     #[Route('/admin/account/telegrams/{page<\d+>}', name: 'admin.index', methods: ['GET', 'POST'])]
     public function index(
         Request $request,
+        AllAccountTelegramInterface $allAccountTelegram,
         int $page = 0,
     ): Response
     {
-        return new Response('admin/account/telegrams');
 
         // Поиск
         $search = new SearchDTO();
@@ -60,14 +59,16 @@ final class IndexController extends AbstractController
         // $filterForm->handleRequest($request);
 
         // Получаем список
-        //$fsd = $allfsd->fetchAllfsdAssociative($search);
+        $AccountTelegram = $allAccountTelegram
+            ->search($search)
+            ->findAll();
+
 
         return $this->render(
             [
-                'query'  => [],
+                'query' => $AccountTelegram,
                 'search' => $searchForm->createView(),
             ]
         );
     }
 }
-

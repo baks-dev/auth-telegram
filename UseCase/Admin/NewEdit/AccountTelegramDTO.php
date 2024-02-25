@@ -37,13 +37,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 /** @see AccountTelegramEvent */
 final class AccountTelegramDTO implements AccountTelegramEventInterface
 {
-
     /**
      * Идентификатор события
      */
     #[Assert\Uuid]
     private ?AccountTelegramEventUid $id = null;
-
 
     /**
      * Идентификатор пользователя
