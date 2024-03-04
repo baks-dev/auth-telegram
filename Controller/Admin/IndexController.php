@@ -50,7 +50,9 @@ final class IndexController extends AbstractController
 
         // Поиск
         $search = new SearchDTO();
-        $searchForm = $this->createForm(SearchForm::class, $search);
+        $searchForm = $this->createForm(SearchForm::class, $search,
+            ['action' => $this->generateUrl('auth-telegram:admin.index')]
+        );
         $searchForm->handleRequest($request);
 
         // Фильтр
