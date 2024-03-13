@@ -39,32 +39,35 @@ final class AccountTelegramRemoveHandler
         $this->ORMQueryBuilder = $ORMQueryBuilder;
     }
 
-    public function handle(AccountTelegramRemoveDTO $command) : void
+    public function handle(AccountTelegramRemoveDTO $command): void
     {
         $em = $this->ORMQueryBuilder->getEntityManager();
 
-        $main = $this->ORMQueryBuilder->createQueryBuilder(self::class);
+        $mainBuilder = $this->ORMQueryBuilder->createQueryBuilder(self::class);
 
-        $main
+        $mainBuilder
             ->select('main')
             ->from(AccountTelegram::class, 'main')
             ->where('main.id = :id')
-            ->setParameter('id', $command->getUsr(), UserUid::TYPE)
-            ->getOneOrNullResult();
+            ->setParameter('id', $command->getUsr(), UserUid::TYPE);
+
+        $main = $mainBuilder->getOneOrNullResult();
 
         if($main)
         {
             $em->remove($main);
         }
 
-        $events = $this->ORMQueryBuilder->createQueryBuilder(self::class);
+        $eventsBuilder = $this->ORMQueryBuilder->createQueryBuilder(self::class);
 
-        $events
+        $eventsBuilder
             ->select('event')
             ->from(AccountTelegramEvent::class, 'event')
             ->where('event.account = :account')
             ->setParameter('account', $command->getUsr(), UserUid::TYPE)
             ->getResult();
+
+        $events = $eventsBuilder->getResult();
 
         if($events)
         {

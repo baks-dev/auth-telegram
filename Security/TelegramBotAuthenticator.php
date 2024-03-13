@@ -124,6 +124,7 @@ final class TelegramBotAuthenticator extends AbstractAuthenticator
         return null;
     }
 
+
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         if($this->telegramRequest->request())

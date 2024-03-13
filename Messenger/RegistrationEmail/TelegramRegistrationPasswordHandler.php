@@ -144,7 +144,7 @@ final class TelegramRegistrationPasswordHandler
         if($passValid === false)
         {
             /* Ошибка авторизации, удаляем аккаунт Telegram */
-            $response = $this
+            $this
                 ->sendMessage
                 ->delete([
                     //$TelegramRequest->getLast(),
@@ -155,18 +155,16 @@ final class TelegramRegistrationPasswordHandler
                 ->message('Ошибка авторизации! Повторная попытка через 30 сек...')
                 ->send();
 
-//            /** Сохраняем идентификатор системного сообщения */
-//            if(isset($response['result']['message_id']))
-//            {
-//                $this->saveSystemMessage($TelegramRequest->getChatId(), $response['result']['message_id']);
-//            }
 
             $AccountTelegramRemoveDTO = new AccountTelegramRemoveDTO($AccountTelegramEvent->getAccount());
             $this->accountTelegramRemoveHandler->handle($AccountTelegramRemoveDTO);
 
             $this->logger->warning('Неверный пароль. Ошибка авторизации пользователя!', [__FILE__.':'.__LINE__]);
+
             return;
         }
+
+
 
         /** Активируем и сохраняем аккаунт Telegram */
         $AccountTelegramDTO->setStatus(AccountTelegramStatusActive::class);
@@ -183,13 +181,9 @@ final class TelegramRegistrationPasswordHandler
             ->chanel($TelegramRequest->getChatId())
             ->message('Вы успешно авторизованы')
             ->send();
+
+
     }
 
-//    private function saveSystemMessage(int $chat, int $id): void
-//    {
-//        $systemItem = $this->cache->getItem('system-'.$chat);
-//        $systemItem->set($id);
-//        $this->cache->save($systemItem);
-//    }
 }
 
