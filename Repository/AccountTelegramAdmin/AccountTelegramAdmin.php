@@ -57,11 +57,12 @@ final class AccountTelegramAdmin implements AccountTelegramAdminInterface
 
         $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
-        //$dbal->select('id');
+        //$dbal->select('*');
         $dbal
             ->from(ProfileGroupUsers::class, 'group_profile')
             ->where('group_profile.prefix = :prefix')
             ->setParameter('prefix', new GroupPrefix('ROLE_ADMIN'), GroupPrefix::TYPE);
+
 
         $dbal->join(
             'group_profile',
@@ -87,6 +88,7 @@ final class AccountTelegramAdmin implements AccountTelegramAdminInterface
 
 
         $dbal->select('telegram_event.chat');
+
 
         return (string) $dbal
             ->enableCache('auth-telegram', 86400)

@@ -108,6 +108,21 @@ final class TelegramRegistrationPasswordHandler
                 __FILE__.':'.__LINE__,
                 'chat' => $TelegramRequest->getChatId()
             ]);
+
+            $this
+                ->sendMessage
+
+                /** При регистрации всегда удаляем сообщение пользователя из чата */
+                ->delete([
+                    $TelegramRequest->getLast(),
+                    $TelegramRequest->getSystem(),
+                    $TelegramRequest->getId(),
+                ])
+
+                ->chanel($TelegramRequest->getChatId())
+                ->message('Не удалось убедиться, что этот аккаунт принадлежит Вам, попробуйте ещё раз')
+                ->send();
+
             return;
         }
 

@@ -100,6 +100,21 @@ final class TelegramRegistrationEmailHandler
 
             if(!$AccountEvent)
             {
+                $this
+                    ->sendMessage
+
+                    /** При регистрации всегда удаляем сообщение пользователя из чата */
+                    ->delete([
+                        $TelegramRequest->getLast(),
+                        $TelegramRequest->getSystem(),
+                        $TelegramRequest->getId(),
+                    ])
+
+                    ->chanel($TelegramRequest->getChatId())
+                    ->message('Ведите свой пароль')
+                    ->send();
+
+
                 $this->logger->warning('Пользователь с указанным Email не найден', [__FILE__.':'.__LINE__, $TelegramRequest->getText()]);
                 return;
             }

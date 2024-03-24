@@ -47,7 +47,7 @@ final class ActiveProfileByAccountTelegram implements ActiveProfileByAccountTele
     }
 
     /**
-     * Метод возвращает активный идентификатор пользователя идентификатора чата
+     * Метод возвращает активный идентификатор профиля пользователя идентификатора чата
      */
 
     public function findByChat(int|string $chat): ?UserProfileUid
@@ -84,8 +84,6 @@ final class ActiveProfileByAccountTelegram implements ActiveProfileByAccountTele
             'profile',
             'profile.id = profile_info.profile');
 
-
-        
 
        $profile =  $qb->enableCache('auth-telegram', 86400)->fetchOne();
 

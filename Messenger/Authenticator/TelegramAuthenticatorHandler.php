@@ -95,6 +95,8 @@ final class TelegramAuthenticatorHandler
             return;
         }
 
+
+
         /** @var CacheItemInterface $cacheItem */
         $cache = $this->cache->init();
         $cacheItem = $cache->getItem($TelegramRequest->getIdentifier());

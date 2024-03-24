@@ -32,6 +32,7 @@ use BaksDev\Auth\Telegram\UseCase\User\Auth\TelegramAuthForm;
 use BaksDev\Core\Cache\AppCacheInterface;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Form\Search\SearchForm;
+use BaksDev\Telegram\Bot\Repository\UsersTableTelegramSettings\TelegramBotSettingsInterface;
 use chillerlan\QRCode\QRCode;
 use DateInterval;
 use Symfony\Component\Cache\Adapter\ApcuAdapter;
@@ -49,16 +50,15 @@ final class AuthController extends AbstractController
     public function index(
         Request $request,
         AppCacheInterface $appCache,
+        TelegramBotSettingsInterface $settings,
         int $page = 0,
     ): Response
     {
-
         if($this->getUsr())
         {
             /* Редирект на главную страницу */
             return $this->redirectToRoute('core:user.homepage');
         }
-
 
         $form = $this->createForm(
             TelegramAuthForm::class,
@@ -94,11 +94,15 @@ final class AuthController extends AbstractController
             $code = $Session->get($key);
         }
 
+
+
+
         return $this->render(
             [
                 'form' => $form->createView(),
                 'qrcode' => (new QRCode())->render($code['qr']),
-                'lifetime' => ($code['lifetime'] - time())
+                'lifetime' => ($code['lifetime'] - time()),
+                'url' => $settings->settings()->getUrl(), // ссылка на Telegram Bot
 
             ]
         );

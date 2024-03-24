@@ -8,8 +8,12 @@
 
 <div class="d-flex flex-column gap-3 w-100 small ps-3">
 
-    <div class="small text-muted">{{ 'form.help'|trans }}</div>
-    <div>Время действия QR истекает через &nbsp; <span class="auth-telegram-timer fw-bolder">{{ lifetime }}</span>
+    <div class="small text-muted">
+        {{ 'form.help'|trans({'%url%' : '<a target="_blank" href="'~url~'">'~url~'</a>' })|raw }}
+    </div>
+
+    <div>
+        Время действия QR истекает через &nbsp; <span class="auth-telegram-timer fw-bolder">{{ lifetime }}</span>
     </div>
 
     <div class="d-flex align-items-end gap-3">
@@ -33,7 +37,7 @@
         label: '<span>'~ 'form.save'|trans ~'</span>
 				<span class="spinner-border spinner-border-sm vertical-middle d-none"></span>
 			',
-        attr: { class : 'btn btn-lg btn-primary w-100 rounded-3 small text-uppercase fw-bolder' }
+        attr: { class : 'btn btn-lg btn-primary w-100 rounded-3 text-uppercase fw-bolder' }
     }) }}
 
 </div>

@@ -26,13 +26,13 @@ declare(strict_types=1);
 namespace BaksDev\Auth\Telegram\Security;
 
 use BaksDev\Auth\Telegram\Messenger\RegistrationEmail\TelegramRegistrationEmailMessage;
-use BaksDev\Auth\Telegram\Repository\ActiveAccountEventByChat\ActiveAccountEventByChatInterface;
+use BaksDev\Auth\Telegram\Repository\ActiveUserTelegramAccount\ActiveUserTelegramAccountInterface;
 use BaksDev\Auth\Telegram\Type\Event\AccountTelegramEventUid;
 use BaksDev\Auth\Telegram\UseCase\User\Auth\TelegramAuthDTO;
 use BaksDev\Auth\Telegram\UseCase\User\Auth\TelegramAuthForm;
 use BaksDev\Core\Cache\AppCacheInterface;
 use BaksDev\Core\Messenger\MessageDispatchInterface;
-use BaksDev\Telegram\Bot\Repository\UsersTableTelegramSettings\GetTelegramBotSettingsInterface;
+use BaksDev\Telegram\Bot\Repository\UsersTableTelegramSettings\TelegramBotSettingsInterface;
 use BaksDev\Telegram\Request\TelegramRequest;
 use BaksDev\Users\User\Repository\GetUserById\GetUserByIdInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -51,8 +51,8 @@ use Symfony\Component\Translation\LocaleSwitcher;
 
 final class TelegramBotAuthenticator extends AbstractAuthenticator
 {
-    private GetTelegramBotSettingsInterface $telegramBotSettings;
-    private ActiveAccountEventByChatInterface $activeAccountEventByChat;
+    private TelegramBotSettingsInterface $telegramBotSettings;
+    private ActiveUserTelegramAccountInterface $ActiveUserTelegramAccount;
     private GetUserByIdInterface $userById;
     private LocaleSwitcher $localeSwitcher;
     private TelegramRequest $telegramRequest;
@@ -61,15 +61,15 @@ final class TelegramBotAuthenticator extends AbstractAuthenticator
 
     public function __construct(
         TelegramRequest $telegramRequest,
-        GetTelegramBotSettingsInterface $telegramBotSettings,
-        ActiveAccountEventByChatInterface $activeAccountEventByChat,
+        TelegramBotSettingsInterface $telegramBotSettings,
+        ActiveUserTelegramAccountInterface $ActiveUserTelegramAccount,
         GetUserByIdInterface $userById,
         LocaleSwitcher $localeSwitcher,
         MessageDispatchInterface $messageDispatch,
     )
     {
         $this->telegramBotSettings = $telegramBotSettings;
-        $this->activeAccountEventByChat = $activeAccountEventByChat;
+        $this->ActiveUserTelegramAccount = $ActiveUserTelegramAccount;
         $this->userById = $userById;
         $this->localeSwitcher = $localeSwitcher;
         $this->telegramRequest = $telegramRequest;
@@ -102,7 +102,7 @@ final class TelegramBotAuthenticator extends AbstractAuthenticator
                  * Пользователь должен быть зарегистрирован через телеграм-бот
                  */
 
-                $UserUid = $this->activeAccountEventByChat
+                $UserUid = $this->ActiveUserTelegramAccount
                     ->findByChat($TelegramRequest->getChatId());
 
                 if($UserUid === null)

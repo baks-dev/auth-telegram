@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Auth\Telegram\Messenger;
 
+use BaksDev\Auth\Telegram\Repository\AccountTelegramAdmin\AccountTelegramAdminInterface;
 use BaksDev\Core\Cache\AppCacheInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -32,6 +33,8 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler]
 final class AccountTelegramDispatch
 {
+    public function __construct(AccountTelegramAdminInterface $accountTelegramAdmin) {}
+
     public function __invoke(AccountTelegramMessage $message): void {}
 }
 

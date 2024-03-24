@@ -26,13 +26,13 @@ declare(strict_types=1);
 namespace BaksDev\Auth\Telegram\Security;
 
 use BaksDev\Auth\Telegram\Messenger\RegistrationEmail\TelegramRegistrationEmailMessage;
-use BaksDev\Auth\Telegram\Repository\ActiveAccountEventByChat\ActiveAccountEventByChatInterface;
+use BaksDev\Auth\Telegram\Repository\ActiveUserTelegramAccount\ActiveUserTelegramAccountInterface;
 use BaksDev\Auth\Telegram\Type\Event\AccountTelegramEventUid;
 use BaksDev\Auth\Telegram\UseCase\User\Auth\TelegramAuthDTO;
 use BaksDev\Auth\Telegram\UseCase\User\Auth\TelegramAuthForm;
 use BaksDev\Core\Cache\AppCacheInterface;
 use BaksDev\Core\Messenger\MessageDispatchInterface;
-use BaksDev\Telegram\Bot\Repository\UsersTableTelegramSettings\GetTelegramBotSettingsInterface;
+use BaksDev\Telegram\Bot\Repository\UsersTableTelegramSettings\TelegramBotSettingsInterface;
 use BaksDev\Telegram\Request\TelegramRequest;
 use BaksDev\Users\User\Repository\GetUserById\GetUserByIdInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -56,7 +56,7 @@ final class TelegramFormAuthenticator extends AbstractAuthenticator
     private const LOGIN_ROUTE = 'auth-telegram:user.auth';
     private const SUCCESS_REDIRECT = 'core:user.homepage';
 
-    private ActiveAccountEventByChatInterface $activeAccountEventByChat;
+    private ActiveUserTelegramAccountInterface $ActiveUserTelegramAccount;
     private GetUserByIdInterface $userById;
     private UrlGeneratorInterface $urlGenerator;
     private FormFactoryInterface $form;
@@ -66,14 +66,14 @@ final class TelegramFormAuthenticator extends AbstractAuthenticator
 
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
-        ActiveAccountEventByChatInterface $activeAccountEventByChat,
+        ActiveUserTelegramAccountInterface $ActiveUserTelegramAccount,
         GetUserByIdInterface $userById,
         FormFactoryInterface $form,
         AppCacheInterface $appCache,
         TranslatorInterface $translator,
     )
     {
-        $this->activeAccountEventByChat = $activeAccountEventByChat;
+        $this->ActiveUserTelegramAccount = $ActiveUserTelegramAccount;
         $this->userById = $userById;
         $this->urlGenerator = $urlGenerator;
         $this->form = $form;
@@ -116,7 +116,7 @@ final class TelegramFormAuthenticator extends AbstractAuthenticator
                     /**  Авторизуем пользователя по идентификатору события */
                     $AccountTelegramEventUid = new AccountTelegramEventUid((string) $code['qr']);
 
-                    $UserUid = $this->activeAccountEventByChat
+                    $UserUid = $this->ActiveUserTelegramAccount
                         ->findByEvent($AccountTelegramEventUid);
 
                     if(!$UserUid)
