@@ -87,7 +87,7 @@ final class TelegramRegistrationEmailHandler
 
         if($AccountTelegramEvent !== null)
         {
-            $this->logger->info('Пользователь уже заполнил Email', [__FILE__.':'.__LINE__]);
+            $this->logger->info('Пользователь уже заполнил добавлен', [__FILE__.':'.__LINE__]);
             return;
         }
 

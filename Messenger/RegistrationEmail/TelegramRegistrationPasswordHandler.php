@@ -88,6 +88,11 @@ final class TelegramRegistrationPasswordHandler
             return;
         }
 
+        if($TelegramRequest->getText() === '/start')
+        {
+            return;
+        }
+
         /** Только в приватном чате с ботом возможна регистрация */
         if($TelegramRequest->getChat()->getType() !== 'private')
         {
@@ -109,19 +114,19 @@ final class TelegramRegistrationPasswordHandler
                 'chat' => $TelegramRequest->getChatId()
             ]);
 
-            $this
-                ->sendMessage
-
-                /** При регистрации всегда удаляем сообщение пользователя из чата */
-                ->delete([
-                    $TelegramRequest->getLast(),
-                    $TelegramRequest->getSystem(),
-                    $TelegramRequest->getId(),
-                ])
-
-                ->chanel($TelegramRequest->getChatId())
-                ->message('Не удалось убедиться, что этот аккаунт принадлежит Вам, попробуйте ещё раз')
-                ->send();
+//            $this
+//                ->sendMessage
+//
+//                /** При регистрации всегда удаляем сообщение пользователя из чата */
+//                ->delete([
+//                    $TelegramRequest->getLast(),
+//                    $TelegramRequest->getSystem(),
+//                    $TelegramRequest->getId(),
+//                ])
+//
+//                ->chanel($TelegramRequest->getChatId())
+//                ->message('Не удалось убедиться, что этот аккаунт принадлежит Вам')
+//                ->send();
 
             return;
         }
@@ -132,7 +137,7 @@ final class TelegramRegistrationPasswordHandler
 
         if(false === $AccountTelegramDTO->getStatus()->equals(AccountTelegramStatusNew::class))
         {
-            $this->logger->info('Не проверяем пользователя: AccountTelegram не имеет статуса NEW «Новый»', [__FILE__.':'.__LINE__]);
+            $this->logger->info('Не регистрируем пользователя: AccountTelegram не имеет статуса NEW «Новый»', [__FILE__.':'.__LINE__]);
             return;
         }
 
