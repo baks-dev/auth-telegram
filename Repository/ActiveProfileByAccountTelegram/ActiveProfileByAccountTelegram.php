@@ -85,7 +85,7 @@ final class ActiveProfileByAccountTelegram implements ActiveProfileByAccountTele
             'profile.id = profile_info.profile');
 
 
-       $profile =  $qb->enableCache('auth-telegram', 86400)->fetchOne();
+       $profile =  $qb->enableCache('auth-telegram', 60)->fetchOne();
 
        return $profile ? new UserProfileUid($profile) : null;
 
