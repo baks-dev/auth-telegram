@@ -30,7 +30,7 @@ use BaksDev\Auth\Telegram\Entity\Event\AccountTelegramEvent;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Users\User\Type\Id\UserUid;
 
-final class CurrentAccountTelegram implements CurrentAccountTelegramInterface
+final class CurrentAccountTelegramRepository implements CurrentAccountTelegramInterface
 {
     private DBALQueryBuilder $DBALQueryBuilder;
 

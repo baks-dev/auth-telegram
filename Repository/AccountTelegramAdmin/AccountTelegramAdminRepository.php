@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -23,16 +23,17 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Auth\Telegram\Repository\UserProfileByChat;
+namespace BaksDev\Auth\Telegram\Repository\AccountTelegramAdmin;
 
 use BaksDev\Auth\Telegram\Entity\AccountTelegram;
 use BaksDev\Auth\Telegram\Entity\Event\AccountTelegramEvent;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
+use BaksDev\Users\Profile\Group\BaksDevUsersProfileGroupBundle;
+use BaksDev\Users\Profile\Group\Entity\Users\ProfileGroupUsers;
+use BaksDev\Users\Profile\Group\Type\Prefix\Group\GroupPrefix;
 use BaksDev\Users\Profile\UserProfile\Entity\Info\UserProfileInfo;
-use BaksDev\Users\Profile\UserProfile\Entity\Personal\UserProfilePersonal;
-use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
 
-final class UserProfileByChat implements UserProfileByChatInterface
+final class AccountTelegramAdminRepository implements AccountTelegramAdminInterface
 {
     private DBALQueryBuilder $DBALQueryBuilder;
 
@@ -43,51 +44,54 @@ final class UserProfileByChat implements UserProfileByChatInterface
         $this->DBALQueryBuilder = $DBALQueryBuilder;
     }
 
+
     /**
-     * Возвращает Username профиля пользователя по идентификатору чата
+     * Метод возвращает идентификатор чата системного администратора
      */
-    public function getUserProfileNameByChat(string $chat): mixed
+    public function find(): ?string
     {
-        $qb = $this->DBALQueryBuilder->createQueryBuilder(self::class);
+        if(!class_exists(BaksDevUsersProfileGroupBundle::class))
+        {
+            return null;
+        }
 
-        $qb->select('personal.username');
+        $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
-        $qb->from(AccountTelegramEvent::TABLE, 'chat_event');
+        //$dbal->select('*');
+        $dbal
+            ->from(ProfileGroupUsers::class, 'group_profile')
+            ->where('group_profile.prefix = :prefix')
+            ->setParameter('prefix', new GroupPrefix('ROLE_ADMIN'), GroupPrefix::TYPE);
 
-        $qb->join(
-            'chat_event',
-            AccountTelegram::TABLE,
-            'chat',
-            'chat.event = chat_event.id'
+
+        $dbal->join(
+            'group_profile',
+            UserProfileInfo::class,
+            'profile',
+            'profile.profile = group_profile.profile'
         );
 
-        $qb->leftJoin(
-            'chat_event',
-            UserProfileInfo::TABLE,
-            'info',
-            'info.usr = chat_event.account
-            ');
-
-        $qb->leftJoin(
-            'info',
-            UserProfile::TABLE,
+        $dbal->join(
             'profile',
-            'profile.id = info.profile
-            ');
-
-        $qb->leftJoin(
-            'profile',
-            UserProfilePersonal::TABLE,
-            'personal',
-            'personal.event = profile.event'
+            AccountTelegram::class,
+            'telegram',
+            'telegram.id = profile.usr'
         );
 
-        $qb->where('chat_event.chat = :chat')
-            ->setParameter('chat', $chat);
+        $dbal
+            ->join(
+                'telegram',
+                AccountTelegramEvent::class,
+                'telegram_event',
+                'telegram_event.id = telegram.event'
+            );
 
-        return $qb
-            ->enableCache('auth-telegram')
-            ->fetchOne();
 
+        $dbal->select('telegram_event.chat');
+
+
+        return (string) $dbal
+            ->enableCache('auth-telegram', 86400)
+            ->fetchOne() ?: null;
     }
 }

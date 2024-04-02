@@ -33,7 +33,7 @@ use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 
-final class AllAccountTelegram implements AllAccountTelegramInterface
+final class AllAccountTelegramRepository implements AllAccountTelegramInterface
 {
     private PaginatorInterface $paginator;
 

@@ -23,19 +23,16 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Auth\Telegram\Repository\ActiveProfileByAccountTelegram;
+namespace BaksDev\Auth\Telegram\Repository\UserProfileByChat;
 
-
+use BaksDev\Auth\Telegram\Entity\AccountTelegram;
 use BaksDev\Auth\Telegram\Entity\Event\AccountTelegramEvent;
-use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Users\Profile\UserProfile\Entity\Info\UserProfileInfo;
+use BaksDev\Users\Profile\UserProfile\Entity\Personal\UserProfilePersonal;
 use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use BaksDev\Users\Profile\UserProfile\Type\UserProfileStatus\Status\UserProfileStatusActive;
-use BaksDev\Users\Profile\UserProfile\Type\UserProfileStatus\UserProfileStatus;
 
-final class ActiveProfileByAccountTelegram implements ActiveProfileByAccountTelegramInterface
+final class UserProfileByChatRepository implements UserProfileByChatInterface
 {
     private DBALQueryBuilder $DBALQueryBuilder;
 
@@ -47,47 +44,50 @@ final class ActiveProfileByAccountTelegram implements ActiveProfileByAccountTele
     }
 
     /**
-     * Метод возвращает активный идентификатор профиля пользователя идентификатора чата
+     * Возвращает Username профиля пользователя по идентификатору чата
      */
-
-    public function findByChat(int|string $chat): ?UserProfileUid
+    public function getUserProfileNameByChat(string $chat): mixed
     {
         $qb = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
-        $qb->select('profile.id');
-        $qb->from(AccountTelegramEvent::TABLE, 'telegram_event');
+        $qb->select('personal.username');
 
-        $qb->where('telegram_event.chat = :chat');
-        $qb->setParameter('chat', (string) $chat);
-
-        $qb->andWhere('telegram_event.status = :telegram_status');
-        $qb->setParameter(
-            'telegram_status',
-            new AccountTelegramStatus(new AccountTelegramStatus\AccountTelegramStatusActive()),
-            AccountTelegramStatus::TYPE);
+        $qb->from(AccountTelegramEvent::TABLE, 'chat_event');
 
         $qb->join(
-            'telegram_event',
+            'chat_event',
+            AccountTelegram::TABLE,
+            'chat',
+            'chat.event = chat_event.id'
+        );
+
+        $qb->leftJoin(
+            'chat_event',
             UserProfileInfo::TABLE,
-            'profile_info',
-            '
-                profile_info.usr = telegram_event.account AND 
-                profile_info.status = :profile_status AND 
-                profile_info.active = true
+            'info',
+            'info.usr = chat_event.account
             ');
 
-        $qb->setParameter('profile_status', new UserProfileStatus(UserProfileStatusActive::class), UserProfileStatus::TYPE);
-
-        $qb->join(
-            'profile_info',
+        $qb->leftJoin(
+            'info',
             UserProfile::TABLE,
             'profile',
-            'profile.id = profile_info.profile');
+            'profile.id = info.profile
+            ');
 
+        $qb->leftJoin(
+            'profile',
+            UserProfilePersonal::TABLE,
+            'personal',
+            'personal.event = profile.event'
+        );
 
-       $profile =  $qb->enableCache('auth-telegram', 60)->fetchOne();
+        $qb->where('chat_event.chat = :chat')
+            ->setParameter('chat', $chat);
 
-       return $profile ? new UserProfileUid($profile) : null;
+        return $qb
+            ->enableCache('auth-telegram')
+            ->fetchOne();
 
     }
 }

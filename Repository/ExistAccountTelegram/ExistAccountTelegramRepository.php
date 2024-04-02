@@ -32,7 +32,7 @@ use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\AccountTelegramStatu
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use Doctrine\DBAL\ParameterType;
 
-final class ExistAccountTelegram implements ExistAccountTelegramInterface
+final class ExistAccountTelegramRepository implements ExistAccountTelegramInterface
 {
     private DBALQueryBuilder $DBALQueryBuilder;
 
