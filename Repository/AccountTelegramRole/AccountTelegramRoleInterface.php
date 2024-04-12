@@ -28,5 +28,5 @@ use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 interface AccountTelegramRoleInterface
 {
     /** Метод возвращает всех пользователей Telegram, имеющие доступ (РОЛЬ) в профилю */
-    public function fetchAll(UserProfileUid $profile, string $role): array|bool;
+    public function fetchAll(string $role, ?UserProfileUid $profile = null): array|bool;
 }

@@ -44,6 +44,8 @@ final class AccountTelegramRoleRepository implements AccountTelegramRoleInterfac
 {
     private DBALQueryBuilder $DBALQueryBuilder;
 
+    private ?UserProfileUid $profile = null;
+
     public function __construct(
         DBALQueryBuilder $DBALQueryBuilder,
     )
@@ -51,10 +53,27 @@ final class AccountTelegramRoleRepository implements AccountTelegramRoleInterfac
         $this->DBALQueryBuilder = $DBALQueryBuilder;
     }
 
+    public function profile(UserProfile|UserProfileUid|string $profile)
+    {
+        if(is_string($profile))
+        {
+            $profile = new UserProfileUid($profile);
+        }
+
+        if($profile instanceof UserProfile)
+        {
+            $profile = $profile->getId();
+        }
+
+        $this->profile = $profile;
+
+        return $this;
+    }
+
     /**
-     * Метод возвращает всех пользователей Telegram, имеющие доступ (РОЛЬ) к профилю
+     * Метод возвращает всех пользователей Telegram, имеющие доступ к указанному профилю
      */
-    public function fetchAll(UserProfileUid $profile, string $role): array|bool
+    public function fetchAll(string $role, ?UserProfileUid $profile = null): array|bool
     {
         if(!class_exists(BaksDevUsersProfileGroupBundle::class))
         {
@@ -64,11 +83,14 @@ final class AccountTelegramRoleRepository implements AccountTelegramRoleInterfac
         $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
         $dbal
-            ->from(ProfileGroupUsers::class, 'usr')
-            ->where('usr.profile = :profile OR usr.authority = :profile')
-            ->setParameter('profile', $profile, UserProfileUid::TYPE);
+            ->from(ProfileGroupUsers::class, 'usr');
 
-
+        if($profile)
+        {
+            $dbal
+                ->where('usr.profile = :profile OR usr.authority = :profile')
+                ->setParameter('profile', $profile, UserProfileUid::TYPE);
+        }
 
         $dbal
             ->join(
@@ -135,6 +157,7 @@ final class AccountTelegramRoleRepository implements AccountTelegramRoleInterfac
         /** Account Telegram */
         $dbal
             ->select('account_event.chat')
+            ->addGroupBy('account_event.chat')
             ->leftJoin(
                 'account',
                 AccountTelegramEvent::class,
