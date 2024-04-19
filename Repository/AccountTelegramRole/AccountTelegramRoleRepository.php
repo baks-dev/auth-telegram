@@ -157,14 +157,13 @@ final class AccountTelegramRoleRepository implements AccountTelegramRoleInterfac
         /** Account Telegram */
         $dbal
             ->select('account_event.chat')
-            ->addGroupBy('account_event.chat')
+            ->groupBy('account_event.chat')
             ->leftJoin(
                 'account',
                 AccountTelegramEvent::class,
                 'account_event',
                 'account_event.id = account.event'
             );
-
 
         return $dbal
             ->enableCache('auth-telegram', 3600)
