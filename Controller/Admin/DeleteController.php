@@ -60,6 +60,8 @@ final class DeleteController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid() && $form->has('account_telegram_delete'))
         {
+            $this->refreshTokenForm($form);
+
             $handle = $AccountTelegramDeleteHandler->handle($AccountTelegramDeleteDTO);
 
             $this->addFlash

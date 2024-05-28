@@ -66,6 +66,8 @@ final class EditController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid() && $form->has('account_telegram'))
         {
+            $this->refreshTokenForm($form);
+
             $handle = $AccountTelegramHandler->handle($AccountTelegramDTO);
 
             $this->addFlash
