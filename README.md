@@ -1,6 +1,6 @@
 # BaksDev Auth Telegram
 
-[![Version](https://img.shields.io/badge/version-7.1.1-blue)](https://github.com/baks-dev/auth-telegram/releases)
+[![Version](https://img.shields.io/badge/version-7.1.2-blue)](https://github.com/baks-dev/auth-telegram/releases)
 ![php 8.3+](https://img.shields.io/badge/php-min%208.3-red.svg)
 
 Модуль авторизации пользователя в Telegram
@@ -13,7 +13,7 @@ $ composer require baks-dev/auth-telegram
 
 ## Дополнительно
 
-Установка файловых ресурсов в публичную директорию (javascript, css, image ...):
+Установка конфигурации и файловых ресурсов:
 
 ``` bash
 $ php bin/console baks:assets:install
@@ -27,7 +27,7 @@ $ php bin/console doctrine:migrations:diff
 $ php bin/console doctrine:migrations:migrate
 ```
 
-Тесты
+## Тестирование
 
 ``` bash
 $ php bin/phpunit --group=auth-telegram
