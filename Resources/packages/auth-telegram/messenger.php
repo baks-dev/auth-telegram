@@ -31,8 +31,8 @@ return static function (FrameworkConfig $framework) {
     
     $messenger
         ->transport('auth-telegram')
-        ->dsn('%env(MESSENGER_TRANSPORT_DSN)%')
-        ->options(['queue_name' => 'auth-telegram'])
+        ->dsn('redis://%env(REDIS_PASSWORD)%@%env(REDIS_HOST)%:%env(REDIS_PORT)%?auto_setup=true')
+        ->options(['stream' => 'auth-telegram'])
         ->failureTransport('failed-auth-telegram')
         ->retryStrategy()
         ->maxRetries(3)
@@ -43,7 +43,9 @@ return static function (FrameworkConfig $framework) {
 
     ;
 
-    $messenger->transport('failed-auth-telegram')
+    $failure = $framework->messenger();
+
+    $failure->transport('failed-auth-telegram')
         ->dsn('%env(MESSENGER_TRANSPORT_DSN)%')
         ->options(['queue_name' => 'failed-auth-telegram'])
     ;
