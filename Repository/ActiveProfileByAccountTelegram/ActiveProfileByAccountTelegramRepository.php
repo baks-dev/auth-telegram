@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace BaksDev\Auth\Telegram\Repository\ActiveProfileByAccountTelegram;
 
-
 use BaksDev\Auth\Telegram\Entity\Event\AccountTelegramEvent;
 use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
@@ -64,7 +63,8 @@ final class ActiveProfileByAccountTelegramRepository implements ActiveProfileByA
         $qb->setParameter(
             'telegram_status',
             new AccountTelegramStatus(new AccountTelegramStatus\AccountTelegramStatusActive()),
-            AccountTelegramStatus::TYPE);
+            AccountTelegramStatus::TYPE
+        );
 
         $qb->join(
             'telegram_event',
@@ -74,20 +74,25 @@ final class ActiveProfileByAccountTelegramRepository implements ActiveProfileByA
                 profile_info.usr = telegram_event.account AND 
                 profile_info.status = :profile_status AND 
                 profile_info.active = true
-            ');
-
-        $qb->setParameter('profile_status', new UserProfileStatus(UserProfileStatusActive::class), UserProfileStatus::TYPE);
+            '
+        )
+            ->setParameter(
+                'profile_status',
+                UserProfileStatusActive::class,
+                UserProfileStatus::TYPE
+            );
 
         $qb->join(
             'profile_info',
             UserProfile::TABLE,
             'profile',
-            'profile.id = profile_info.profile');
+            'profile.id = profile_info.profile'
+        );
 
 
-       $profile =  $qb->enableCache('auth-telegram', 60)->fetchOne();
+        $profile = $qb->enableCache('auth-telegram', 60)->fetchOne();
 
-       return $profile ? new UserProfileUid($profile) : null;
+        return $profile ? new UserProfileUid($profile) : null;
 
     }
 }

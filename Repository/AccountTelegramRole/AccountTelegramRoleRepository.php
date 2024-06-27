@@ -132,8 +132,13 @@ final class AccountTelegramRoleRepository implements AccountTelegramRoleInterfac
                 profile_info.profile = usr.profile AND 
                 profile_info.status = :profile_status AND 
                 profile_info.active = true
-            ')
-            ->setParameter('profile_status', new UserProfileStatus(UserProfileStatusActive::class), UserProfileStatus::TYPE);
+            '
+            )
+            ->setParameter(
+                'profile_status',
+                UserProfileStatusActive::class,
+                UserProfileStatus::TYPE
+            );
 
 
         $dbal

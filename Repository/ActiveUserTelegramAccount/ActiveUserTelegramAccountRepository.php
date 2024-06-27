@@ -29,8 +29,8 @@ use BaksDev\Auth\Telegram\Entity\AccountTelegram;
 use BaksDev\Auth\Telegram\Entity\Event\AccountTelegramEvent;
 use BaksDev\Auth\Telegram\Type\Event\AccountTelegramEventUid;
 use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus;
-use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\AccountTelegramStatusBlock;
 use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\AccountTelegramStatusActive;
+use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\AccountTelegramStatusBlock;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Users\Profile\UserProfile\Entity\Info\UserProfileInfo;
 use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
@@ -71,7 +71,8 @@ final class ActiveUserTelegramAccountRepository implements ActiveUserTelegramAcc
             ->setParameter(
                 'telegram_status',
                 new AccountTelegramStatus(AccountTelegramStatusActive::class),
-                AccountTelegramStatus::TYPE);
+                AccountTelegramStatus::TYPE
+            );
 
         $dbal->join(
             'event',
@@ -92,12 +93,15 @@ final class ActiveUserTelegramAccountRepository implements ActiveUserTelegramAcc
             'profile_info',
             UserProfile::class,
             'profile',
-            'profile.id = profile_info.profile');
+            'profile.id = profile_info.profile'
+        );
 
 
-        $dbal->setParameter('profile_status',
-            new UserProfileStatus(UserProfileStatusActive::class),
-            UserProfileStatus::TYPE);
+        $dbal->setParameter(
+            'profile_status',
+            UserProfileStatusActive::class,
+            UserProfileStatus::TYPE
+        );
 
 
         $dbal->andWhere('EXISTS('.$exist->getSQL().')');
@@ -131,7 +135,8 @@ final class ActiveUserTelegramAccountRepository implements ActiveUserTelegramAcc
             ->setParameter(
                 'telegram_status',
                 new AccountTelegramStatus(new AccountTelegramStatusBlock()),
-                AccountTelegramStatus::TYPE);
+                AccountTelegramStatus::TYPE
+            );
 
         $dbal->join(
             'event',
@@ -141,26 +146,26 @@ final class ActiveUserTelegramAccountRepository implements ActiveUserTelegramAcc
         );
 
         /**  Проверяем, что имеется активный профиль */
-//        $exist = $this->DBALQueryBuilder->createQueryBuilder(self::class);
-//
-//        $exist->select('1');
-//        $exist->from(UserProfileInfo::class, 'profile_info');
-//        $exist->where('profile_info.usr = event.account');
-//        $exist->andWhere('profile_info.status = :profile_status');
-//        $exist->andWhere('profile_info.active = true');
-//
-//        $exist->join(
-//            'profile_info',
-//            UserProfile::class,
-//            'profile',
-//            'profile.id = profile_info.profile');
-//
-//
-//        $dbal->setParameter('profile_status',
-//            new UserProfileStatus(new UserProfileStatusActive()),
-//            UserProfileStatus::TYPE);
-//
-//        $dbal->andWhere('EXISTS('.$exist->getSQL().')');
+        //        $exist = $this->DBALQueryBuilder->createQueryBuilder(self::class);
+        //
+        //        $exist->select('1');
+        //        $exist->from(UserProfileInfo::class, 'profile_info');
+        //        $exist->where('profile_info.usr = event.account');
+        //        $exist->andWhere('profile_info.status = :profile_status');
+        //        $exist->andWhere('profile_info.active = true');
+        //
+        //        $exist->join(
+        //            'profile_info',
+        //            UserProfile::class,
+        //            'profile',
+        //            'profile.id = profile_info.profile');
+        //
+        //
+        //        $dbal->setParameter('profile_status',
+        //            new UserProfileStatus(new UserProfileStatusActive()),
+        //            UserProfileStatus::TYPE);
+        //
+        //        $dbal->andWhere('EXISTS('.$exist->getSQL().')');
 
 
         $result = $dbal->enableCache('auth-telegram', 3600)->fetchOne();
