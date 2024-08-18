@@ -25,15 +25,15 @@ declare(strict_types=1);
 
 namespace BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\Collection;
 
-use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus;
-use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 final class AccountTelegramStatusCollection
 {
     private iterable $status;
 
     public function __construct(
-        #[TaggedIterator('baks.account.telegram.status')] iterable $status)
+        #[AutowireIterator('baks.account.telegram.status')] iterable $status
+    )
     {
         $this->status = $status;
     }

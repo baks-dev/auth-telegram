@@ -27,14 +27,14 @@ namespace BaksDev\Auth\Telegram\Controller\Admin;
 
 
 use BaksDev\Auth\Telegram\Repository\AllAccountTelegram\AllAccountTelegramInterface;
+use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Form\Search\SearchForm;
+use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use BaksDev\Core\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
-use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[AsController]
 #[RoleSecurity('ROLE_ACCOUNT_TELEGRAM')]

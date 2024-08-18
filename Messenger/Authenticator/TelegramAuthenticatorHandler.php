@@ -31,10 +31,6 @@ use BaksDev\Auth\Telegram\Entity\AccountTelegram;
 use BaksDev\Auth\Telegram\Repository\AccountTelegramEvent\AccountTelegramEventInterface;
 use BaksDev\Auth\Telegram\Type\Event\AccountTelegramEventUid;
 use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\AccountTelegramStatusBlock;
-use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\AccountTelegramStatusNew;
-use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\Collection\AccountTelegramStatusCollection;
-use BaksDev\Auth\Telegram\UseCase\Admin\NewEdit\AccountTelegramDTO;
-use BaksDev\Auth\Telegram\UseCase\Admin\NewEdit\AccountTelegramHandler;
 use BaksDev\Auth\Telegram\UseCase\Telegram\Authenticator\AccountTelegramAuthenticatorDTO;
 use BaksDev\Auth\Telegram\UseCase\Telegram\Authenticator\AccountTelegramAuthenticatorHandler;
 use BaksDev\Core\Cache\AppCacheInterface;
@@ -48,10 +44,10 @@ use BaksDev\Telegram\Request\Type\TelegramRequestIdentifier;
 use BaksDev\Telegram\Request\Type\TelegramRequestMessage;
 use Psr\Cache\CacheItemInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Bundle\SecurityBundle\Security;
 
 #[AsMessageHandler(priority: 0)]
 final class TelegramAuthenticatorHandler
@@ -104,7 +100,7 @@ final class TelegramAuthenticatorHandler
         if(!$cacheItem->get())
         {
             $this->logger->warning('Проверочный код отсутствует либо его время действия истекло', [
-                __FILE__.':'.__LINE__,
+                self::class.':'.__LINE__,
                 'chat' => $TelegramRequest->getChatId(),
                 'identifier' => $TelegramRequest->getIdentifier(),
                 'data' => $cacheItem->get()
@@ -131,7 +127,7 @@ final class TelegramAuthenticatorHandler
                 ->send();
 
             $this->logger->info('Пользователь AccountTelegram не найден', [
-                __FILE__.':'.__LINE__,
+                self::class.':'.__LINE__,
                 'chat' => $TelegramRequest->getChatId()
             ]);
 
@@ -154,7 +150,7 @@ final class TelegramAuthenticatorHandler
                 ->send();
 
             $this->logger->warning('Пользователь заблокирован!', [
-                __FILE__.':'.__LINE__,
+                self::class.':'.__LINE__,
                 'chat' => $TelegramRequest->getChatId()
             ]);
 
@@ -177,7 +173,7 @@ final class TelegramAuthenticatorHandler
                 ->message($text)
                 ->send();
 
-            $this->logger->critical($text, [__FILE__.':'.__LINE__]);
+            $this->logger->critical($text, [self::class.':'.__LINE__]);
 
             return;
         }
@@ -206,7 +202,7 @@ final class TelegramAuthenticatorHandler
         $cache->delete($TelegramRequest->getIdentifier());
 
         $this->logger->info('Пользователю отправлен проверочный код ', [
-            __FILE__.':'.__LINE__,
+            self::class.':'.__LINE__,
             'chat' => $TelegramRequest->getChatId()
         ]);
 

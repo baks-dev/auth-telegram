@@ -30,18 +30,18 @@ use BaksDev\Auth\Telegram\Type\Event\AccountTelegramEventUid;
 use BaksDev\Auth\Telegram\UseCase\User\Auth\TelegramAuthDTO;
 use BaksDev\Auth\Telegram\UseCase\User\Auth\TelegramAuthForm;
 use BaksDev\Core\Cache\AppCacheInterface;
+use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Form\Search\SearchForm;
+use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use BaksDev\Telegram\Bot\Repository\UsersTableTelegramSettings\TelegramBotSettingsInterface;
 use chillerlan\QRCode\QRCode;
 use DateInterval;
 use Symfony\Component\Cache\Adapter\ApcuAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use BaksDev\Core\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
-use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[AsController]
 final class AuthController extends AbstractController

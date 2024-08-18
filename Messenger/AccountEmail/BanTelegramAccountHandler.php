@@ -71,7 +71,7 @@ final class BanTelegramAccountHandler
         $this->accountTelegramHandler->handle($AccountTelegramDTO);
 
         $this->logger->warning('AccountTelegram успешно заблокирован', [
-            __FILE__.':'.__LINE__,
+            self::class.':'.__LINE__,
             'UserUid' => $command->getId(),
             'FirstName' => $AccountTelegramDTO->getFirstname()
         ]);

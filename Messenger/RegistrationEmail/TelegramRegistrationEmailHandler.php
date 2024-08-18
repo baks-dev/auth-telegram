@@ -87,7 +87,7 @@ final class TelegramRegistrationEmailHandler
 
         if($AccountTelegramEvent !== null)
         {
-            $this->logger->info('Пользователь уже заполнил добавлен', [__FILE__.':'.__LINE__]);
+            $this->logger->info('Пользователь уже заполнил добавлен', [self::class.':'.__LINE__]);
             return;
         }
 
@@ -115,7 +115,7 @@ final class TelegramRegistrationEmailHandler
                     ->send();
 
 
-                $this->logger->warning('Пользователь с указанным Email не найден', [__FILE__.':'.__LINE__, $TelegramRequest->getText()]);
+                $this->logger->warning('Пользователь с указанным Email не найден', [self::class.':'.__LINE__, $TelegramRequest->getText()]);
                 return;
             }
 
@@ -149,7 +149,7 @@ final class TelegramRegistrationEmailHandler
                 ->message('Ведите свой пароль')
                 ->send();
 
-            $this->logger->info('Добавили AccountTelegram с указанным Email для ввода пароля', [__FILE__.':'.__LINE__, $TelegramRequest->getText()]);
+            $this->logger->info('Добавили AccountTelegram с указанным Email для ввода пароля', [self::class.':'.__LINE__, $TelegramRequest->getText()]);
         }
 
     }

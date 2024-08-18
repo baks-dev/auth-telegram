@@ -27,16 +27,7 @@ namespace BaksDev\Auth\Telegram\Messenger\Authenticator;
 
 use BaksDev\Auth\Email\Repository\AccountEventActiveByEmail\AccountEventActiveByEmailInterface;
 use BaksDev\Auth\Email\Type\Email\AccountEmail;
-use BaksDev\Auth\Telegram\Entity\AccountTelegram;
 use BaksDev\Auth\Telegram\Repository\AccountTelegramEvent\AccountTelegramEventInterface;
-use BaksDev\Auth\Telegram\Type\Event\AccountTelegramEventUid;
-use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\AccountTelegramStatusBlock;
-use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\AccountTelegramStatusNew;
-use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\Collection\AccountTelegramStatusCollection;
-use BaksDev\Auth\Telegram\UseCase\Admin\NewEdit\AccountTelegramDTO;
-use BaksDev\Auth\Telegram\UseCase\Admin\NewEdit\AccountTelegramHandler;
-use BaksDev\Auth\Telegram\UseCase\Telegram\Authenticator\AccountTelegramAuthenticatorDTO;
-use BaksDev\Auth\Telegram\UseCase\Telegram\Authenticator\AccountTelegramAuthenticatorHandler;
 use BaksDev\Auth\Telegram\UseCase\Telegram\Registration\AccountTelegramRegistrationDTO;
 use BaksDev\Auth\Telegram\UseCase\Telegram\Registration\AccountTelegramRegistrationHandler;
 use BaksDev\Core\Cache\AppCacheInterface;
@@ -51,12 +42,12 @@ use BaksDev\Telegram\Request\Type\TelegramRequestMessage;
 use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
 use Psr\Cache\CacheItemInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Bundle\SecurityBundle\Security;
 
 #[AsMessageHandler(priority: 1)]
 final class TelegramRegistrationHandler
@@ -158,7 +149,7 @@ final class TelegramRegistrationHandler
 
 
         $this->logger->info('Добавили нового пользователя AccountTelegram', [
-            __FILE__.':'.__LINE__,
+            self::class.':'.__LINE__,
             'chat' => $TelegramRequest->getChatId()
         ]);
     }

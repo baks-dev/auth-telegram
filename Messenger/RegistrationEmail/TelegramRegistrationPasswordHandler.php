@@ -101,7 +101,7 @@ final class TelegramRegistrationPasswordHandler
 
         if(filter_var($TelegramRequest->getText(), FILTER_VALIDATE_EMAIL) !== false)
         {
-            $this->logger->info('Не проверяем пароль: передан Email', [__FILE__.':'.__LINE__]);
+            $this->logger->info('Не проверяем пароль: передан Email', [self::class.':'.__LINE__]);
             return;
         }
 
@@ -110,7 +110,7 @@ final class TelegramRegistrationPasswordHandler
         if(!$AccountTelegramEvent)
         {
             $this->logger->info('Не проверяем пользователя: AccountTelegram не найден', [
-                __FILE__.':'.__LINE__,
+                self::class.':'.__LINE__,
                 'chat' => $TelegramRequest->getChatId()
             ]);
 
@@ -137,7 +137,7 @@ final class TelegramRegistrationPasswordHandler
 
         if(false === $AccountTelegramDTO->getStatus()->equals(AccountTelegramStatusNew::class))
         {
-            $this->logger->info('Не регистрируем пользователя: AccountTelegram не имеет статуса NEW «Новый»', [__FILE__.':'.__LINE__]);
+            $this->logger->info('Не регистрируем пользователя: AccountTelegram не имеет статуса NEW «Новый»', [self::class.':'.__LINE__]);
             return;
         }
 
@@ -150,7 +150,7 @@ final class TelegramRegistrationPasswordHandler
             $this->accountTelegramRemoveHandler->handle($AccountTelegramRemoveDTO);
 
             $this->logger->warning('AccountEvent не найден. Удаляем AccountTelegram', [
-                __FILE__.':'.__LINE__,
+                self::class.':'.__LINE__,
                 'UserUid' => $AccountTelegramEvent->getAccount()
             ]);
 
@@ -179,7 +179,7 @@ final class TelegramRegistrationPasswordHandler
             $AccountTelegramRemoveDTO = new AccountTelegramRemoveDTO($AccountTelegramEvent->getAccount());
             $this->accountTelegramRemoveHandler->handle($AccountTelegramRemoveDTO);
 
-            $this->logger->warning('Неверный пароль. Ошибка авторизации пользователя!', [__FILE__.':'.__LINE__]);
+            $this->logger->warning('Неверный пароль. Ошибка авторизации пользователя!', [self::class.':'.__LINE__]);
 
             return;
         }
@@ -189,7 +189,7 @@ final class TelegramRegistrationPasswordHandler
         /** Активируем и сохраняем аккаунт Telegram */
         $AccountTelegramDTO->setStatus(AccountTelegramStatusActive::class);
         $this->accountTelegramHandler->handle($AccountTelegramDTO);
-        $this->logger->warning('Пользователь успешно авторизован', [__FILE__.':'.__LINE__]);
+        $this->logger->warning('Пользователь успешно авторизован', [self::class.':'.__LINE__]);
 
         $this
             ->sendMessage
