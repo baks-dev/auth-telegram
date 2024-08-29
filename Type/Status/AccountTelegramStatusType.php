@@ -25,17 +25,16 @@ declare(strict_types=1);
 
 namespace BaksDev\Auth\Telegram\Type\Status;
 
-use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\Collection\AccountTelegramStatusInterface;
+use BaksDev\Auth\Email\Type\EmailStatus\EmailStatus;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\StringType;
 use Doctrine\DBAL\Types\Type;
-use InvalidArgumentException;
 
 final class AccountTelegramStatusType extends Type
 {
     public function convertToDatabaseValue($value, AbstractPlatform $platform): string
     {
-        return (string) $value;
+        return (string) new AccountTelegramStatus($value);
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform): ?AccountTelegramStatus
