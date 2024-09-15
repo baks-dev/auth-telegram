@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace BaksDev\Auth\Telegram\Security;
 
-use BaksDev\Auth\Telegram\Messenger\RegistrationEmail\TelegramRegistrationEmailMessage;
 use BaksDev\Auth\Telegram\Repository\ActiveUserTelegramAccount\ActiveUserTelegramAccountInterface;
 use BaksDev\Auth\Telegram\Type\Event\AccountTelegramEventUid;
 use BaksDev\Auth\Telegram\UseCase\User\Auth\TelegramAuthDTO;
@@ -174,8 +173,8 @@ final class TelegramFormAuthenticator extends AbstractAuthenticator
                         'danger.code',
                         domain: 'auth-telegram.user'
                     ),
-                ]
-                , 401
+                ],
+                401
             );
         }
 

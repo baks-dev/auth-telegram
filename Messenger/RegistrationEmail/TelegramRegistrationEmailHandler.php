@@ -32,8 +32,8 @@ use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\Collection\AccountTe
 use BaksDev\Auth\Telegram\UseCase\Admin\NewEdit\AccountTelegramDTO;
 use BaksDev\Auth\Telegram\UseCase\Admin\NewEdit\AccountTelegramHandler;
 use BaksDev\Core\Cache\AppCacheInterface;
-use BaksDev\Telegram\Api\TelegramDeleteMessage;
-use BaksDev\Telegram\Api\TelegramSendMessage;
+use BaksDev\Telegram\Api\TelegramDeleteMessages;
+use BaksDev\Telegram\Api\TelegramSendMessages;
 use BaksDev\Telegram\Request\Type\TelegramRequestMessage;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -45,13 +45,13 @@ final class TelegramRegistrationEmailHandler
     private AccountTelegramEventInterface $accountTelegramEvent;
     private AccountEventActiveByEmailInterface $accountEventActiveByEmail;
     private AccountTelegramHandler $accountTelegramHandler;
-    private TelegramSendMessage $sendMessage;
+    private TelegramSendMessages $sendMessage;
     private LoggerInterface $logger;
     private AccountTelegramStatusCollection $accountTelegramStatusCollection;
 
     public function __construct(
         LoggerInterface $authTelegramLogger,
-        TelegramSendMessage $sendMessage,
+        TelegramSendMessages $sendMessage,
         AccountTelegramEventInterface $accountTelegramEvent,
         AccountEventActiveByEmailInterface $accountEventActiveByEmail,
         AccountTelegramHandler $accountTelegramHandler,

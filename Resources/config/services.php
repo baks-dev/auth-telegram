@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -23,31 +23,30 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use Symfony\Config\FrameworkConfig;
+use BaksDev\Auth\Telegram\BaksDevAuthTelegramBundle;
 
-return static function (FrameworkConfig $framework) {
+return static function(ContainerConfigurator $configurator) {
 
-    $messenger = $framework->messenger();
-    
-    $messenger
-        ->transport('auth-telegram')
-        ->dsn('redis://%env(REDIS_PASSWORD)%@%env(REDIS_HOST)%:%env(REDIS_PORT)%?auto_setup=true')
-        ->options(['stream' => 'auth-telegram'])
-        ->failureTransport('failed-auth-telegram')
-        ->retryStrategy()
-        ->maxRetries(3)
-        ->delay(1000)
-        ->maxDelay(0)
-        ->multiplier(3) // увеличиваем задержку перед каждой повторной попыткой
-        ->service(null)
+    $services = $configurator->services()
+        ->defaults()
+        ->autowire()
+        ->autoconfigure();
 
-    ;
+    $NAMESPACE = BaksDevAuthTelegramBundle::NAMESPACE;
+    $PATH = BaksDevAuthTelegramBundle::PATH;
 
-    $failure = $framework->messenger();
+    $services->load($NAMESPACE, $PATH)
+        ->exclude([
+            $PATH.'{Entity,Resources,Type}',
+            $PATH.'**'.DIRECTORY_SEPARATOR.'*Message.php',
+            $PATH.'**'.DIRECTORY_SEPARATOR.'*DTO.php',
+            $PATH.'**'.DIRECTORY_SEPARATOR.'*Test.php',
+        ]);
 
-    $failure->transport('failed-auth-telegram')
-        ->dsn('%env(MESSENGER_TRANSPORT_DSN)%')
-        ->options(['queue_name' => 'failed-auth-telegram'])
-    ;
+    /* Статусы */
+    $services->load(
+        $NAMESPACE.'Type\Status\AccountTelegramStatus\\',
+        implode(DIRECTORY_SEPARATOR, [$PATH, 'Type', 'Status', 'AccountTelegramStatus'])  //$PATH.'Type/Status/AccountTelegramStatus'
+    );
 
 };

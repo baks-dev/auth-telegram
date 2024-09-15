@@ -24,12 +24,14 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use BaksDev\Auth\Telegram\BaksDevAuthTelegramBundle;
-use Symfony\Config\FrameworkConfig;
+use Symfony\Config\TwigConfig;
 
-return static function(FrameworkConfig $config) {
+return static function(TwigConfig $twig) {
 
-    $config
-        ->translator()
-        ->paths([BaksDevAuthTelegramBundle::PATH.'Resources/translations/']);
+    $twig->path(
+        BaksDevAuthTelegramBundle::PATH.implode(DIRECTORY_SEPARATOR, ['Resources', 'view', '']), //.'Resources/view',
+        'auth-telegram'
+    );
 
 };
+

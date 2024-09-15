@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2023.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,28 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use BaksDev\Auth\Telegram\BaksDevAuthTelegramBundle;
-use Symfony\Config\TwigConfig;
+use Symfony\Config\FrameworkConfig;
 
-return static function (TwigConfig $twig) {
+return static function(FrameworkConfig $framework) {
 
-    $twig->path(
-        BaksDevAuthTelegramBundle::PATH.'Resources/view',
-        'auth-telegram'
-    );
+    $messenger = $framework->messenger();
+
+    $messenger
+        ->transport('auth-telegram')
+        ->dsn('redis://%env(REDIS_PASSWORD)%@%env(REDIS_HOST)%:%env(REDIS_PORT)%?auto_setup=true')
+        ->options(['stream' => 'auth-telegram'])
+        ->failureTransport('failed-auth-telegram')
+        ->retryStrategy()
+        ->maxRetries(3)
+        ->delay(1000)
+        ->maxDelay(0)
+        ->multiplier(3) // увеличиваем задержку перед каждой повторной попыткой
+        ->service(null);
+
+    $failure = $framework->messenger();
+
+    $failure->transport('failed-auth-telegram')
+        ->dsn('%env(MESSENGER_TRANSPORT_DSN)%')
+        ->options(['queue_name' => 'failed-auth-telegram']);
 
 };
-

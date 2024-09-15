@@ -32,8 +32,8 @@ use BaksDev\Auth\Telegram\UseCase\Telegram\Registration\AccountTelegramRegistrat
 use BaksDev\Auth\Telegram\UseCase\Telegram\Registration\AccountTelegramRegistrationHandler;
 use BaksDev\Core\Cache\AppCacheInterface;
 use BaksDev\Manufacture\Part\Telegram\Type\ManufacturePartDone;
-use BaksDev\Telegram\Api\TelegramDeleteMessage;
-use BaksDev\Telegram\Api\TelegramSendMessage;
+use BaksDev\Telegram\Api\TelegramDeleteMessages;
+use BaksDev\Telegram\Api\TelegramSendMessages;
 use BaksDev\Telegram\Bot\Messenger\TelegramEndpointMessage\TelegramEndpointMessage;
 use BaksDev\Telegram\Request\TelegramRequest;
 use BaksDev\Telegram\Request\Type\TelegramRequestCallback;
@@ -56,7 +56,7 @@ final class TelegramRegistrationHandler
     private AppCacheInterface $cache;
     private AccountTelegramEventInterface $accountTelegramEvent;
     private AccountTelegramRegistrationHandler $telegramRegistrationHandler;
-    private TelegramSendMessage $telegramSendMessage;
+    private TelegramSendMessages $telegramSendMessage;
     private UrlGeneratorInterface $urlGenerator;
 
 
@@ -65,7 +65,7 @@ final class TelegramRegistrationHandler
         AccountTelegramEventInterface $accountTelegramEvent,
         AccountTelegramRegistrationHandler $telegramRegistrationHandler,
         AppCacheInterface $appCache,
-        TelegramSendMessage $telegramSendMessage,
+        TelegramSendMessages $telegramSendMessage,
         UrlGeneratorInterface $urlGenerator
     )
     {

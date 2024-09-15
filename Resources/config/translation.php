@@ -24,27 +24,12 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use BaksDev\Auth\Telegram\BaksDevAuthTelegramBundle;
+use Symfony\Config\FrameworkConfig;
 
-return static function(ContainerConfigurator $configurator) {
-	$services = $configurator->services()
-		->defaults()
-		->autowire()
-		->autoconfigure()
-	;
+return static function(FrameworkConfig $config) {
 
-    $NAMESPACE = BaksDevAuthTelegramBundle::NAMESPACE;
-    $PATH = BaksDevAuthTelegramBundle::PATH;
-
-    $services->load($NAMESPACE, $PATH)
-        ->exclude([
-            $PATH.'{Entity,Resources,Type}',
-            $PATH.'**/*Message.php',
-            $PATH.'**/*DTO.php',
-        ])
-    ;
-
-    /* Статусы */
-    $services->load($NAMESPACE.'Type\Status\AccountTelegramStatus\\', $PATH.'Type/Status/AccountTelegramStatus');
+    $config
+        ->translator()
+        ->paths([BaksDevAuthTelegramBundle::PATH.implode(DIRECTORY_SEPARATOR, ['Resources', 'translations', ''])]); // .'Resources/translations/']);
 
 };
-

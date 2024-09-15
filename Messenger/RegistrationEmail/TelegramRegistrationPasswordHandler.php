@@ -35,7 +35,7 @@ use BaksDev\Auth\Telegram\UseCase\Admin\NewEdit\AccountTelegramHandler;
 use BaksDev\Auth\Telegram\UseCase\Admin\Remove\AccountTelegramRemoveDTO;
 use BaksDev\Auth\Telegram\UseCase\Admin\Remove\AccountTelegramRemoveHandler;
 use BaksDev\Core\Cache\AppCacheInterface;
-use BaksDev\Telegram\Api\TelegramSendMessage;
+use BaksDev\Telegram\Api\TelegramSendMessages;
 use BaksDev\Telegram\Request\Type\TelegramRequestMessage;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -46,7 +46,7 @@ use Symfony\Contracts\Cache\CacheInterface;
 final class TelegramRegistrationPasswordHandler
 {
     private AccountTelegramEventInterface $accountTelegramEvent;
-    private TelegramSendMessage $sendMessage;
+    private TelegramSendMessages $sendMessage;
     private UserPasswordHasherInterface $passwordHasher;
     private CurrentAccountEventInterface $currentAccountEvent;
     private AccountTelegramRemoveHandler $accountTelegramRemoveHandler;
@@ -58,7 +58,7 @@ final class TelegramRegistrationPasswordHandler
 
     public function __construct(
         LoggerInterface $authTelegramLogger,
-        TelegramSendMessage $sendMessage,
+        TelegramSendMessages $sendMessage,
         AccountTelegramEventInterface $accountTelegramEvent,
         UserPasswordHasherInterface $passwordHasher,
         CurrentAccountEventInterface $currentAccountEvent,

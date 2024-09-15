@@ -10,7 +10,7 @@ use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatusType;
 use Symfony\Config\DoctrineConfig;
 
 return static function(ContainerConfigurator $container, DoctrineConfig $doctrine) {
-    
+
     $doctrine->dbal()->type(AccountTelegramEventUid::TYPE)->class(AccountTelegramEventType::class);
     $doctrine->dbal()->type(AccountTelegramStatus::TYPE)->class(AccountTelegramStatusType::class);
 
@@ -20,6 +20,6 @@ return static function(ContainerConfigurator $container, DoctrineConfig $doctrin
         ->type('attribute')
         ->dir(BaksDevAuthTelegramBundle::PATH.'Entity')
         ->isBundle(false)
-        ->prefix('BaksDev\Auth\Telegram\Entity')
+        ->prefix(BaksDevAuthTelegramBundle::NAMESPACE.'\\Entity')
         ->alias('auth-telegram');
 };

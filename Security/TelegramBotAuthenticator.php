@@ -27,9 +27,6 @@ namespace BaksDev\Auth\Telegram\Security;
 
 use BaksDev\Auth\Telegram\Messenger\RegistrationEmail\TelegramRegistrationEmailMessage;
 use BaksDev\Auth\Telegram\Repository\ActiveUserTelegramAccount\ActiveUserTelegramAccountInterface;
-use BaksDev\Auth\Telegram\Type\Event\AccountTelegramEventUid;
-use BaksDev\Auth\Telegram\UseCase\User\Auth\TelegramAuthDTO;
-use BaksDev\Auth\Telegram\UseCase\User\Auth\TelegramAuthForm;
 use BaksDev\Core\Cache\AppCacheInterface;
 use BaksDev\Core\Messenger\MessageDispatchInterface;
 use BaksDev\Telegram\Bot\Repository\UsersTableTelegramSettings\TelegramBotSettingsInterface;
@@ -51,30 +48,14 @@ use Symfony\Component\Translation\LocaleSwitcher;
 
 final class TelegramBotAuthenticator extends AbstractAuthenticator
 {
-    private TelegramBotSettingsInterface $telegramBotSettings;
-    private ActiveUserTelegramAccountInterface $ActiveUserTelegramAccount;
-    private GetUserByIdInterface $userById;
-    private LocaleSwitcher $localeSwitcher;
-    private TelegramRequest $telegramRequest;
-    private MessageDispatchInterface $messageDispatch;
-
-
     public function __construct(
-        TelegramRequest $telegramRequest,
-        TelegramBotSettingsInterface $telegramBotSettings,
-        ActiveUserTelegramAccountInterface $ActiveUserTelegramAccount,
-        GetUserByIdInterface $userById,
-        LocaleSwitcher $localeSwitcher,
-        MessageDispatchInterface $messageDispatch,
-    )
-    {
-        $this->telegramBotSettings = $telegramBotSettings;
-        $this->ActiveUserTelegramAccount = $ActiveUserTelegramAccount;
-        $this->userById = $userById;
-        $this->localeSwitcher = $localeSwitcher;
-        $this->telegramRequest = $telegramRequest;
-        $this->messageDispatch = $messageDispatch;
-    }
+        private readonly TelegramRequest $telegramRequest,
+        private readonly TelegramBotSettingsInterface $telegramBotSettings,
+        private readonly ActiveUserTelegramAccountInterface $ActiveUserTelegramAccount,
+        private readonly GetUserByIdInterface $userById,
+        private readonly LocaleSwitcher $localeSwitcher,
+        private readonly MessageDispatchInterface $messageDispatch,
+    ) {}
 
     public function supports(Request $request): ?bool
     {
@@ -87,7 +68,6 @@ final class TelegramBotAuthenticator extends AbstractAuthenticator
     {
         /** Получаем паспорт телеграм-бота */
         return new SelfValidatingPassport(
-
             new UserBadge('telegram_bot_authenticator', function() {
 
                 $TelegramRequest = $this->telegramRequest->request();
