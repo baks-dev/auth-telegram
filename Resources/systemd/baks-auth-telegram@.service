@@ -12,7 +12,7 @@
 
 
 [Unit]
-Description=Symfony messenger auth-telegram %i
+Description=auth-telegram
 StartLimitBurst=5
 StartLimitIntervalSec=0
 
