@@ -30,18 +30,11 @@ use BaksDev\Auth\Telegram\Entity\Event\AccountTelegramEvent;
 use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus;
 use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\AccountTelegramStatusActive;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
-use Doctrine\DBAL\ParameterType;
 
 final class ExistAccountTelegramRepository implements ExistAccountTelegramInterface
 {
-    private DBALQueryBuilder $DBALQueryBuilder;
 
-    public function __construct(
-        DBALQueryBuilder $DBALQueryBuilder,
-    )
-    {
-        $this->DBALQueryBuilder = $DBALQueryBuilder;
-    }
+    public function __construct(private readonly DBALQueryBuilder $DBALQueryBuilder) {}
 
     /**
      * Метод проверяет, имеется ли зарегистрированный чат
@@ -50,11 +43,11 @@ final class ExistAccountTelegramRepository implements ExistAccountTelegramInterf
     {
         $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
-        $dbal->from(AccountTelegramEvent::TABLE, 'event');
+        $dbal->from(AccountTelegramEvent::class, 'event');
 
         $dbal->join(
             'event',
-            AccountTelegram::TABLE,
+            AccountTelegram::class,
             'account',
             'account.event = event.id'
         );

@@ -54,7 +54,7 @@ final class ActiveProfileByAccountTelegramRepository implements ActiveProfileByA
         $qb = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
         $qb->select('profile.id');
-        $qb->from(AccountTelegramEvent::TABLE, 'telegram_event');
+        $qb->from(AccountTelegramEvent::class, 'telegram_event');
 
         $qb->where('telegram_event.chat = :chat');
         $qb->setParameter('chat', (string) $chat);
@@ -68,7 +68,7 @@ final class ActiveProfileByAccountTelegramRepository implements ActiveProfileByA
 
         $qb->join(
             'telegram_event',
-            UserProfileInfo::TABLE,
+            UserProfileInfo::class,
             'profile_info',
             '
                 profile_info.usr = telegram_event.account AND 
@@ -84,7 +84,7 @@ final class ActiveProfileByAccountTelegramRepository implements ActiveProfileByA
 
         $qb->join(
             'profile_info',
-            UserProfile::TABLE,
+            UserProfile::class,
             'profile',
             'profile.id = profile_info.profile'
         );

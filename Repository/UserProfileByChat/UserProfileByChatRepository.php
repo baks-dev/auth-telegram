@@ -34,14 +34,8 @@ use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
 
 final class UserProfileByChatRepository implements UserProfileByChatInterface
 {
-    private DBALQueryBuilder $DBALQueryBuilder;
 
-    public function __construct(
-        DBALQueryBuilder $DBALQueryBuilder,
-    )
-    {
-        $this->DBALQueryBuilder = $DBALQueryBuilder;
-    }
+    public function __construct(private readonly DBALQueryBuilder $DBALQueryBuilder) {}
 
     /**
      * Возвращает Username профиля пользователя по идентификатору чата
@@ -52,32 +46,32 @@ final class UserProfileByChatRepository implements UserProfileByChatInterface
 
         $qb->select('personal.username');
 
-        $qb->from(AccountTelegramEvent::TABLE, 'chat_event');
+        $qb->from(AccountTelegramEvent::class, 'chat_event');
 
         $qb->join(
             'chat_event',
-            AccountTelegram::TABLE,
+            AccountTelegram::class,
             'chat',
             'chat.event = chat_event.id'
         );
 
         $qb->leftJoin(
             'chat_event',
-            UserProfileInfo::TABLE,
+            UserProfileInfo::class,
             'info',
             'info.usr = chat_event.account
             ');
 
         $qb->leftJoin(
             'info',
-            UserProfile::TABLE,
+            UserProfile::class,
             'profile',
             'profile.id = info.profile
             ');
 
         $qb->leftJoin(
             'profile',
-            UserProfilePersonal::TABLE,
+            UserProfilePersonal::class,
             'personal',
             'personal.event = profile.event'
         );

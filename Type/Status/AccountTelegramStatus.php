@@ -31,7 +31,7 @@ use InvalidArgumentException;
 
 final class AccountTelegramStatus
 {
-    public const TYPE = 'account_telegram_status';
+    public const string TYPE = 'account_telegram_status';
 
     private ?AccountTelegramStatusInterface $status = null;
 

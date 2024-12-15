@@ -29,9 +29,9 @@ namespace BaksDev\Auth\Telegram\Repository\AllAccountTelegram;
 use BaksDev\Auth\Telegram\Entity\AccountTelegram;
 use BaksDev\Auth\Telegram\Entity\Event\AccountTelegramEvent;
 use BaksDev\Auth\Telegram\Entity\Modify\AccountTelegramModify;
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
-use BaksDev\Core\Doctrine\DBALQueryBuilder;
 
 final class AllAccountTelegramRepository implements AllAccountTelegramInterface
 {
@@ -65,7 +65,7 @@ final class AllAccountTelegramRepository implements AllAccountTelegramInterface
         $dbal
             ->select('telegram.id ')
             ->addSelect('telegram.event ')
-            ->from(AccountTelegram::TABLE, 'telegram');
+            ->from(AccountTelegram::class, 'telegram');
 
         $dbal
             ->addSelect('telegram_event.username AS telegram_username')
