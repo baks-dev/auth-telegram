@@ -32,7 +32,7 @@ use Symfony\Component\Uid\AbstractUid;
 
 final class AccountTelegramEventUid extends Uid
 {
-    public const TEST = '018ad86f-30f9-7c16-9783-3b19957ad312';
+    public const string TEST = '018ad86f-30f9-7c16-9783-3b19957ad312';
 
     public const string TYPE = 'account_telegram_event';
 
