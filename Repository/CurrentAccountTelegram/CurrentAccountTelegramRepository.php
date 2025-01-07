@@ -30,18 +30,12 @@ use BaksDev\Auth\Telegram\Entity\Event\AccountTelegramEvent;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Users\User\Type\Id\UserUid;
 
-final class CurrentAccountTelegramRepository implements CurrentAccountTelegramInterface
+final readonly class CurrentAccountTelegramRepository implements CurrentAccountTelegramInterface
 {
-    private DBALQueryBuilder $DBALQueryBuilder;
 
-    public function __construct(
-        DBALQueryBuilder $DBALQueryBuilder,
-    )
-    {
-        $this->DBALQueryBuilder = $DBALQueryBuilder;
-    }
+    public function __construct(private DBALQueryBuilder $DBALQueryBuilder) {}
 
-    /** Метод возвращает информацию по пользователе Telegram */
+    /** Метод возвращает информацию о пользователе Telegram */
     public function findArrayByUser(UserUid|string $usr): array|bool
     {
         if(is_string($usr))
@@ -68,7 +62,7 @@ final class CurrentAccountTelegramRepository implements CurrentAccountTelegramIn
             );
 
         return $dbal
-            ->enableCache('auth-telegram', 86400)
+            ->enableCache('auth-telegram')
             ->fetchAssociative();
     }
 }
