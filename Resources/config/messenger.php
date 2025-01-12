@@ -41,6 +41,19 @@ return static function(FrameworkConfig $framework) {
         ->multiplier(3) // увеличиваем задержку перед каждой повторной попыткой
         ->service(null);
 
+
+    $messenger
+        ->transport('auth-telegram-low')
+        ->dsn('%env(MESSENGER_TRANSPORT_DSN)%')
+        ->options(['queue_name' => 'auth-telegram'])
+        ->failureTransport('failed-auth-telegram')
+        ->retryStrategy()
+        ->maxRetries(1)
+        ->delay(1000)
+        ->maxDelay(1)
+        ->multiplier(2)
+        ->service(null);
+
     $failure = $framework->messenger();
 
     $failure->transport('failed-auth-telegram')
