@@ -25,57 +25,31 @@ declare(strict_types=1);
 
 namespace BaksDev\Auth\Telegram\Messenger\Authenticator;
 
-use BaksDev\Auth\Email\Repository\AccountEventActiveByEmail\AccountEventActiveByEmailInterface;
-use BaksDev\Auth\Email\Type\Email\AccountEmail;
 use BaksDev\Auth\Telegram\Repository\AccountTelegramEvent\AccountTelegramEventInterface;
 use BaksDev\Auth\Telegram\UseCase\Telegram\Registration\AccountTelegramRegistrationDTO;
 use BaksDev\Auth\Telegram\UseCase\Telegram\Registration\AccountTelegramRegistrationHandler;
 use BaksDev\Core\Cache\AppCacheInterface;
-use BaksDev\Manufacture\Part\Telegram\Type\ManufacturePartDone;
-use BaksDev\Telegram\Api\TelegramDeleteMessages;
 use BaksDev\Telegram\Api\TelegramSendMessages;
 use BaksDev\Telegram\Bot\Messenger\TelegramEndpointMessage\TelegramEndpointMessage;
-use BaksDev\Telegram\Request\TelegramRequest;
-use BaksDev\Telegram\Request\Type\TelegramRequestCallback;
 use BaksDev\Telegram\Request\Type\TelegramRequestIdentifier;
-use BaksDev\Telegram\Request\Type\TelegramRequestMessage;
-use BaksDev\Users\Profile\TypeProfile\Type\Id\TypeProfileUid;
 use Psr\Cache\CacheItemInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Contracts\Cache\CacheInterface;
 
 #[AsMessageHandler(priority: 1)]
 final class TelegramRegistrationHandler
 {
-    private LoggerInterface $logger;
-    private AppCacheInterface $cache;
-    private AccountTelegramEventInterface $accountTelegramEvent;
-    private AccountTelegramRegistrationHandler $telegramRegistrationHandler;
-    private TelegramSendMessages $telegramSendMessage;
-    private UrlGeneratorInterface $urlGenerator;
-
-
     public function __construct(
-        LoggerInterface $authTelegramLogger,
-        AccountTelegramEventInterface $accountTelegramEvent,
-        AccountTelegramRegistrationHandler $telegramRegistrationHandler,
-        AppCacheInterface $appCache,
-        TelegramSendMessages $telegramSendMessage,
-        UrlGeneratorInterface $urlGenerator
-    )
-    {
-        $this->logger = $authTelegramLogger;
-        $this->cache = $appCache;
-        $this->accountTelegramEvent = $accountTelegramEvent;
-        $this->telegramRegistrationHandler = $telegramRegistrationHandler;
-        $this->telegramSendMessage = $telegramSendMessage;
-        $this->urlGenerator = $urlGenerator;
-    }
+        #[Target('authTelegramLogger')] private readonly LoggerInterface $logger,
+        private readonly AccountTelegramEventInterface $accountTelegramEvent,
+        private readonly AccountTelegramRegistrationHandler $telegramRegistrationHandler,
+        private readonly AppCacheInterface $cache,
+        private readonly TelegramSendMessages $telegramSendMessage,
+        private readonly UrlGeneratorInterface $urlGenerator
+    ) {}
 
     /**
      * Регистрируем нового пользователя если отправлен QR-код с идентификатором авторизации

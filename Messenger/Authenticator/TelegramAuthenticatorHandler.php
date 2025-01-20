@@ -25,8 +25,6 @@ declare(strict_types=1);
 
 namespace BaksDev\Auth\Telegram\Messenger\Authenticator;
 
-use BaksDev\Auth\Email\Repository\AccountEventActiveByEmail\AccountEventActiveByEmailInterface;
-use BaksDev\Auth\Email\Type\Email\AccountEmail;
 use BaksDev\Auth\Telegram\Entity\AccountTelegram;
 use BaksDev\Auth\Telegram\Repository\AccountTelegramEvent\AccountTelegramEventInterface;
 use BaksDev\Auth\Telegram\Type\Event\AccountTelegramEventUid;
@@ -34,44 +32,24 @@ use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\AccountTelegramStatu
 use BaksDev\Auth\Telegram\UseCase\Telegram\Authenticator\AccountTelegramAuthenticatorDTO;
 use BaksDev\Auth\Telegram\UseCase\Telegram\Authenticator\AccountTelegramAuthenticatorHandler;
 use BaksDev\Core\Cache\AppCacheInterface;
-use BaksDev\Manufacture\Part\Telegram\Type\ManufacturePartDone;
-use BaksDev\Telegram\Api\TelegramDeleteMessages;
 use BaksDev\Telegram\Api\TelegramSendMessages;
 use BaksDev\Telegram\Bot\Messenger\TelegramEndpointMessage\TelegramEndpointMessage;
-use BaksDev\Telegram\Request\TelegramRequest;
-use BaksDev\Telegram\Request\Type\TelegramRequestCallback;
 use BaksDev\Telegram\Request\Type\TelegramRequestIdentifier;
-use BaksDev\Telegram\Request\Type\TelegramRequestMessage;
 use Psr\Cache\CacheItemInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Contracts\Cache\CacheInterface;
 
 #[AsMessageHandler(priority: 0)]
-final class TelegramAuthenticatorHandler
+final readonly class TelegramAuthenticatorHandler
 {
-    private LoggerInterface $logger;
-    private TelegramSendMessages $telegramSendMessage;
-    private AppCacheInterface $cache;
-    private AccountTelegramEventInterface $accountTelegramEvent;
-    private AccountTelegramAuthenticatorHandler $authenticatorHandler;
-
     public function __construct(
-        LoggerInterface $authTelegramLogger,
-        TelegramSendMessages $telegramSendMessage,
-        AccountTelegramEventInterface $accountTelegramEvent,
-        AccountTelegramAuthenticatorHandler $authenticatorHandler,
-        AppCacheInterface $appCache,
-    )
-    {
-        $this->logger = $authTelegramLogger;
-        $this->telegramSendMessage = $telegramSendMessage;
-        $this->cache = $appCache;
-        $this->accountTelegramEvent = $accountTelegramEvent;
-        $this->authenticatorHandler = $authenticatorHandler;
-    }
+        #[Target('authTelegramLogger')] private LoggerInterface $logger,
+        private TelegramSendMessages $telegramSendMessage,
+        private AccountTelegramEventInterface $accountTelegramEvent,
+        private AccountTelegramAuthenticatorHandler $authenticatorHandler,
+        private AppCacheInterface $cache,
+    ) {}
 
     /**
      * Если отправлен QR-код с идентификатором авторизации
@@ -90,7 +68,6 @@ final class TelegramAuthenticatorHandler
         {
             return;
         }
-
 
 
         /** @var CacheItemInterface $cacheItem */

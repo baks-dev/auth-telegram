@@ -34,50 +34,26 @@ use BaksDev\Auth\Telegram\UseCase\Admin\NewEdit\AccountTelegramDTO;
 use BaksDev\Auth\Telegram\UseCase\Admin\NewEdit\AccountTelegramHandler;
 use BaksDev\Auth\Telegram\UseCase\Admin\Remove\AccountTelegramRemoveDTO;
 use BaksDev\Auth\Telegram\UseCase\Admin\Remove\AccountTelegramRemoveHandler;
-use BaksDev\Core\Cache\AppCacheInterface;
 use BaksDev\Telegram\Api\TelegramSendMessages;
 use BaksDev\Telegram\Request\Type\TelegramRequestMessage;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Contracts\Cache\CacheInterface;
 
 #[AsMessageHandler]
-final class TelegramRegistrationPasswordHandler
+final readonly class TelegramRegistrationPasswordHandler
 {
-    private AccountTelegramEventInterface $accountTelegramEvent;
-    private TelegramSendMessages $sendMessage;
-    private UserPasswordHasherInterface $passwordHasher;
-    private CurrentAccountEventInterface $currentAccountEvent;
-    private AccountTelegramRemoveHandler $accountTelegramRemoveHandler;
-    private AccountTelegramHandler $accountTelegramHandler;
-    private LoggerInterface $logger;
-    private AccountTelegramStatusCollection $accountTelegramStatusCollection;
-    //private CacheInterface $cache;
-
-
     public function __construct(
-        LoggerInterface $authTelegramLogger,
-        TelegramSendMessages $sendMessage,
-        AccountTelegramEventInterface $accountTelegramEvent,
-        UserPasswordHasherInterface $passwordHasher,
-        CurrentAccountEventInterface $currentAccountEvent,
-        AccountTelegramHandler $accountTelegramHandler,
-        AccountTelegramRemoveHandler $accountTelegramRemoveHandler,
-        AccountTelegramStatusCollection $accountTelegramStatusCollection,
-        //AppCacheInterface $appCache
-    )
-    {
-        $this->accountTelegramEvent = $accountTelegramEvent;
-        $this->sendMessage = $sendMessage;
-        $this->passwordHasher = $passwordHasher;
-        $this->currentAccountEvent = $currentAccountEvent;
-        $this->accountTelegramRemoveHandler = $accountTelegramRemoveHandler;
-        $this->accountTelegramHandler = $accountTelegramHandler;
-        $this->logger = $authTelegramLogger;
-        $this->accountTelegramStatusCollection = $accountTelegramStatusCollection;
-        //$this->cache = $appCache->init('telegram');
-    }
+        #[Target('authTelegramLogger')] private LoggerInterface $logger,
+        private TelegramSendMessages $sendMessage,
+        private AccountTelegramEventInterface $accountTelegramEvent,
+        private UserPasswordHasherInterface $passwordHasher,
+        private CurrentAccountEventInterface $currentAccountEvent,
+        private AccountTelegramHandler $accountTelegramHandler,
+        private AccountTelegramRemoveHandler $accountTelegramRemoveHandler,
+        private AccountTelegramStatusCollection $accountTelegramStatusCollection,
+    ) {}
 
     public function __invoke(TelegramRegistrationEmailMessage $message): void
     {
@@ -114,19 +90,19 @@ final class TelegramRegistrationPasswordHandler
                 'chat' => $TelegramRequest->getChatId()
             ]);
 
-//            $this
-//                ->sendMessage
-//
-//                /** При регистрации всегда удаляем сообщение пользователя из чата */
-//                ->delete([
-//                    $TelegramRequest->getLast(),
-//                    $TelegramRequest->getSystem(),
-//                    $TelegramRequest->getId(),
-//                ])
-//
-//                ->chanel($TelegramRequest->getChatId())
-//                ->message('Не удалось убедиться, что этот аккаунт принадлежит Вам')
-//                ->send();
+            //            $this
+            //                ->sendMessage
+            //
+            //                /** При регистрации всегда удаляем сообщение пользователя из чата */
+            //                ->delete([
+            //                    $TelegramRequest->getLast(),
+            //                    $TelegramRequest->getSystem(),
+            //                    $TelegramRequest->getId(),
+            //                ])
+            //
+            //                ->chanel($TelegramRequest->getChatId())
+            //                ->message('Не удалось убедиться, что этот аккаунт принадлежит Вам')
+            //                ->send();
 
             return;
         }
@@ -183,7 +159,6 @@ final class TelegramRegistrationPasswordHandler
 
             return;
         }
-
 
 
         /** Активируем и сохраняем аккаунт Telegram */

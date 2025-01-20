@@ -31,40 +31,23 @@ use BaksDev\Auth\Telegram\Repository\AccountTelegramEvent\AccountTelegramEventIn
 use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\Collection\AccountTelegramStatusCollection;
 use BaksDev\Auth\Telegram\UseCase\Admin\NewEdit\AccountTelegramDTO;
 use BaksDev\Auth\Telegram\UseCase\Admin\NewEdit\AccountTelegramHandler;
-use BaksDev\Core\Cache\AppCacheInterface;
-use BaksDev\Telegram\Api\TelegramDeleteMessages;
 use BaksDev\Telegram\Api\TelegramSendMessages;
 use BaksDev\Telegram\Request\Type\TelegramRequestMessage;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Symfony\Contracts\Cache\CacheInterface;
 
 #[AsMessageHandler(priority: 999)]
-final class TelegramRegistrationEmailHandler
+final readonly class TelegramRegistrationEmailHandler
 {
-    private AccountTelegramEventInterface $accountTelegramEvent;
-    private AccountEventActiveByEmailInterface $accountEventActiveByEmail;
-    private AccountTelegramHandler $accountTelegramHandler;
-    private TelegramSendMessages $sendMessage;
-    private LoggerInterface $logger;
-    private AccountTelegramStatusCollection $accountTelegramStatusCollection;
-
     public function __construct(
-        LoggerInterface $authTelegramLogger,
-        TelegramSendMessages $sendMessage,
-        AccountTelegramEventInterface $accountTelegramEvent,
-        AccountEventActiveByEmailInterface $accountEventActiveByEmail,
-        AccountTelegramHandler $accountTelegramHandler,
-        AccountTelegramStatusCollection $accountTelegramStatusCollection,
-    )
-    {
-        $this->accountTelegramEvent = $accountTelegramEvent;
-        $this->accountEventActiveByEmail = $accountEventActiveByEmail;
-        $this->accountTelegramHandler = $accountTelegramHandler;
-        $this->sendMessage = $sendMessage;
-        $this->logger = $authTelegramLogger;
-        $this->accountTelegramStatusCollection = $accountTelegramStatusCollection;
-    }
+        #[Target('authTelegramLogger')] private LoggerInterface $logger,
+        private TelegramSendMessages $sendMessage,
+        private AccountTelegramEventInterface $accountTelegramEvent,
+        private AccountEventActiveByEmailInterface $accountEventActiveByEmail,
+        private AccountTelegramHandler $accountTelegramHandler,
+        private AccountTelegramStatusCollection $accountTelegramStatusCollection,
+    ) {}
 
     public function __invoke(TelegramRegistrationEmailMessage $message): void
     {
@@ -102,14 +85,12 @@ final class TelegramRegistrationEmailHandler
             {
                 $this
                     ->sendMessage
-
                     /** При регистрации всегда удаляем сообщение пользователя из чата */
                     ->delete([
                         $TelegramRequest->getLast(),
                         $TelegramRequest->getSystem(),
                         $TelegramRequest->getId(),
                     ])
-
                     ->chanel($TelegramRequest->getChatId())
                     ->message('Ведите свой пароль')
                     ->send();
@@ -135,16 +116,14 @@ final class TelegramRegistrationEmailHandler
 
             $this->accountTelegramHandler->handle($AccountTelegramDTO);
 
-             $this
+            $this
                 ->sendMessage
-
-                 /** При регистрации всегда удаляем сообщение пользователя из чата */
+                /** При регистрации всегда удаляем сообщение пользователя из чата */
                 ->delete([
                     $TelegramRequest->getLast(),
                     $TelegramRequest->getSystem(),
                     $TelegramRequest->getId(),
                 ])
-
                 ->chanel($TelegramRequest->getChatId())
                 ->message('Ведите свой пароль')
                 ->send();

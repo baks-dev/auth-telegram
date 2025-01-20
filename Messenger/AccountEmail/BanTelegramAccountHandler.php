@@ -11,29 +11,18 @@ use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\AccountTelegramStatu
 use BaksDev\Auth\Telegram\UseCase\Admin\NewEdit\AccountTelegramDTO;
 use BaksDev\Auth\Telegram\UseCase\Admin\NewEdit\AccountTelegramHandler;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
-final class BanTelegramAccountHandler
+final readonly class BanTelegramAccountHandler
 {
-
-    private CurrentAccountEventInterface $currentAccountEvent;
-    private AccountTelegramHandler $accountTelegramHandler;
-    private AccountTelegramEventInterface $accountTelegramEvent;
-    private LoggerInterface $logger;
-
     public function __construct(
-        CurrentAccountEventInterface $currentAccountEvent,
-        AccountTelegramHandler $accountTelegramHandler,
-        AccountTelegramEventInterface $accountTelegramEvent,
-        LoggerInterface $authTelegramLogger,
-    )
-    {
-        $this->currentAccountEvent = $currentAccountEvent;
-        $this->accountTelegramHandler = $accountTelegramHandler;
-        $this->accountTelegramEvent = $accountTelegramEvent;
-        $this->logger = $authTelegramLogger;
-    }
+        #[Target('authTelegramLogger')] private LoggerInterface $logger,
+        private CurrentAccountEventInterface $currentAccountEvent,
+        private AccountTelegramHandler $accountTelegramHandler,
+        private AccountTelegramEventInterface $accountTelegramEvent,
+    ) {}
 
     /**
      * Блокируем AccountTelegram в случае блокировки AccountEmail
