@@ -32,7 +32,6 @@
       "BaksDev\\Auth\\Telegram\\": ""
     }
   },
-
   "config": {
     "sort-packages": true,
     "allow-plugins": {
