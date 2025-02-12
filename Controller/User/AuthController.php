@@ -29,6 +29,9 @@ namespace BaksDev\Auth\Telegram\Controller\User;
 use BaksDev\Auth\Telegram\Type\Event\AccountTelegramEventUid;
 use BaksDev\Auth\Telegram\UseCase\User\Auth\TelegramAuthDTO;
 use BaksDev\Auth\Telegram\UseCase\User\Auth\TelegramAuthForm;
+use BaksDev\Barcode\Writer\BarcodeFormat;
+use BaksDev\Barcode\Writer\BarcodeType;
+use BaksDev\Barcode\Writer\BarcodeWrite;
 use BaksDev\Core\Cache\AppCacheInterface;
 use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Form\Search\SearchDTO;
@@ -37,6 +40,7 @@ use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use BaksDev\Telegram\Bot\Repository\UsersTableTelegramSettings\TelegramBotSettingsInterface;
 use chillerlan\QRCode\QRCode;
 use DateInterval;
+use RuntimeException;
 use Symfony\Component\Cache\Adapter\ApcuAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,6 +55,7 @@ final class AuthController extends AbstractController
         Request $request,
         AppCacheInterface $appCache,
         TelegramBotSettingsInterface $settings,
+        BarcodeWrite $BarcodeWrite,
         int $page = 0,
     ): Response
     {
@@ -94,13 +99,29 @@ final class AuthController extends AbstractController
             $code = $Session->get($key);
         }
 
+        $BarcodeWrite
+            ->text($code['qr'])
+            ->type(BarcodeType::QRCode)
+            ->format(BarcodeFormat::SVG)
+            ->generate();
 
+        if($BarcodeWrite === false)
+        {
+            /**
+             * Проверить права на исполнение
+             * chmod +x /home/bundles.baks.dev/vПendor/baks-dev/barcode/Writer/Generate
+             * chmod +x /home/bundles.baks.dev/vendor/baks-dev/barcode/Reader/Decode
+             * */
+            throw new RuntimeException('Barcode write error');
+        }
 
+        $QRCode = $BarcodeWrite->render();
+        $BarcodeWrite->remove();
 
         return $this->render(
             [
                 'form' => $form->createView(),
-                'qrcode' => (new QRCode())->render($code['qr']),
+                'qrcode' => $QRCode,
                 'lifetime' => ($code['lifetime'] - time()),
                 'url' => $settings->settings()->getUrl(), // ссылка на Telegram Bot
 
