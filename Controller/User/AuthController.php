@@ -123,7 +123,7 @@ final class AuthController extends AbstractController
                 'form' => $form->createView(),
                 'qrcode' => $QRCode,
                 'lifetime' => ($code['lifetime'] - time()),
-                'url' => $settings->settings()->getUrl(), // ссылка на Telegram Bot
+                'url' => $settings->settings()?->getUrl(), // ссылка на Telegram Bot
 
             ]
         );
