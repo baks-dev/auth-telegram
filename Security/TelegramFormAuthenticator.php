@@ -108,7 +108,7 @@ final class TelegramFormAuthenticator extends AbstractAuthenticator
 
         /** Получаем паспорт */
         return new SelfValidatingPassport(
-            new UserBadge($code['qr'], function() use ($form, $code) {
+            new UserBadge($code['qr'], function() use ($form, $code, $Session) {
 
                 if($form->isSubmitted() && $form->isValid() && $form->has('telegram_auth'))
                 {
@@ -123,8 +123,12 @@ final class TelegramFormAuthenticator extends AbstractAuthenticator
                         return null;
                     }
 
-                    $Authority = $this->appCache->init('Authority');
-                    $Authority->delete((string) $UserUid);
+                    /** Удаляем авторизацию доверенности пользователя */
+
+                    $Session->remove('Authority');
+
+                    //$Authority = $this->appCache->init('Authority');
+                    //$Authority->delete((string) $UserUid);
 
                     return $this->userById->get($UserUid);
                 }
