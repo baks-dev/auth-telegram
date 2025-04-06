@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace BaksDev\Auth\Telegram\Type\Status;
 
 use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\Collection\AccountTelegramStatusInterface;
-use BaksDev\Orders\Order\Type\Status\OrderStatus\Collection\OrderStatusInterface;
 use InvalidArgumentException;
 
 final class AccountTelegramStatus
