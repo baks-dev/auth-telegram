@@ -59,7 +59,7 @@ final class AccountTelegramEventRepository implements AccountTelegramEventInterf
             'main.event = event.id'
         );
 
-        return $qb->enableCache('auth-telegram', 86400)->getOneOrNullResult();
+        return $qb->getOneOrNullResult();
     }
 
     /**
@@ -88,7 +88,7 @@ final class AccountTelegramEventRepository implements AccountTelegramEventInterf
                 'event.id = main.event'
             );
 
-        return $qb->enableCache('auth-telegram', 86400)->getOneOrNullResult();
+        return $qb->getOneOrNullResult();
     }
 
 

@@ -47,12 +47,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Index(columns: ['action'])]
 class AccountTelegramModify extends EntityEvent
 {
-    public const TABLE = 'account_telegram_modify';
-
     /** ID события */
     #[Assert\NotBlank]
     #[ORM\Id]
-    #[ORM\OneToOne(inversedBy: 'modify', targetEntity: AccountTelegramEvent::class)]
+    #[ORM\OneToOne(targetEntity: AccountTelegramEvent::class, inversedBy: 'modify')]
     #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id')]
     private AccountTelegramEvent $event;
 

@@ -92,7 +92,7 @@ class AccountTelegramEvent extends EntityEvent
     /**
      * Модификатор
      */
-    #[ORM\OneToOne(targetEntity: AccountTelegramModify::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: AccountTelegramModify::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private AccountTelegramModify $modify;
 
 
