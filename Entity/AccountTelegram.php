@@ -40,8 +40,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'account_telegram')]
 class AccountTelegram
 {
-    public const TABLE = 'account_telegram';
-
     /** ID */
     #[ORM\Id]
     #[ORM\Column(type: UserUid::TYPE)]

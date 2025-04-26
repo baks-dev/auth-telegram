@@ -43,8 +43,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Index(columns: ['chat'])]
 class AccountTelegramEvent extends EntityEvent
 {
-    public const TABLE = 'account_telegram_event';
-
     /**
      * Идентификатор События
      */
