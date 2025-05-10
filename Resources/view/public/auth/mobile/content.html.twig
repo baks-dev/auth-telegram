@@ -1,0 +1,28 @@
+{% trans_default_domain 'auth-telegram.user' %}
+
+<main class="main d-print-none">
+
+    <div class="mt-3">
+        {# {{ include(_self|replace({ "content.html.twig": "breadcrumb.html.twig" })) }} #}
+    </div>
+
+    <div class="container d-flex flex-column justify-content-center w-100 my-5 pb-3">
+
+        <div class="d-flex gap-3 mb-4 align-items-end small">
+            <h3 class="modal-title text-uppercase h4 fw-bold">
+                {{ 'page.index'|trans }}
+            </h3>
+        </div>
+
+
+        <div class="w-100">
+
+            {{ include(_self|replace({ "content.html.twig": "_form.html.twig" })) }}
+
+        </div>
+
+    </div>
+
+</main>
+
+

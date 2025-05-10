@@ -1,0 +1,61 @@
+{% trans_default_domain 'auth-telegram.user' %}
+
+<div class="modal-dialog modal-dialog-centered" style="--bs-modal-width: 700px;">
+
+    <div class="modal-content p-3 border-bottom border-5 border-primary">
+        {{ form_start(form) }}
+        <div class="modal-header border-0 pb-0">
+            <h3 class="modal-title text-uppercase h4 fw-bold">
+                {{ 'page.index'|trans }}
+            </h3>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+        </div>
+
+        <div class="modal-body">
+            <div class="d-flex justify-content-between align-items-center gap-3">
+                <div class="w-100 align-items-center">
+                    {# <img data-src='' class="lazy" alt='QR Code' width="300" /> #}
+                    {{ qrcode|raw }}
+                </div>
+                <div class="w-100">
+                    <div class="d-flex flex-column gap-3 w-100 small ps-3">
+
+                        <div class="small text-muted">
+                            {{ 'form.help'|trans({'%url%' : '<a target="_blank" href="'~url~'">'~url~'</a>' })|raw }}
+                        </div>
+                        <div>Время действия QR истекает через &nbsp; <span
+                                    class="auth-telegram-timer fw-bolder">{{ lifetime }}</span></div>
+
+                        <div class="d-flex align-items-end gap-3">
+
+                            {{ form_row(form.code, {
+                                label: 'form.code'|trans
+                            }) }}
+
+                            <div class="mb-3">
+                                <a href="{{ path('auth-telegram:public.auth') }}" class="btn btn-link text-muted">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                         viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                              d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"></path>
+                                        <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+
+
+                        {{ form_row(form.telegram_auth, {
+                            label: '<span>'~ 'form.save'|trans ~'</span>
+				<span class="spinner-border spinner-border-sm vertical-middle d-none"></span>
+			',
+                            attr: { class : 'btn btn-lg btn-primary w-100 rounded-3 text-uppercase fw-bolder' }
+                        }) }}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+</div>

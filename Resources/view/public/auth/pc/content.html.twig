@@ -1,0 +1,17 @@
+<main class="main d-print-none container">
+
+    <div class="container mt-3">
+        {{ include(_self|replace({ "content.html.twig": "breadcrumb.html.twig" })) }}
+    </div>
+
+    <div class="container d-flex justify-content-center gap-4 w-75 mt-3">
+        <div class="w-100 align-items-center">
+            {{ qrcode|raw }}
+        </div>
+        <div class="w-100">
+            {{ include(_self|replace({ "content.html.twig": "_form.html.twig" })) }}
+        </div>
+    </div>
+</main>
+
+

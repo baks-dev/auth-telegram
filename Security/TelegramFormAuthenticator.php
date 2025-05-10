@@ -52,7 +52,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class TelegramFormAuthenticator extends AbstractAuthenticator
 {
-    private const LOGIN_ROUTE = 'auth-telegram:user.auth';
+    private const LOGIN_ROUTE = 'auth-telegram:public.auth';
     private const SUCCESS_REDIRECT = 'core:user.homepage';
 
     private ActiveUserTelegramAccountInterface $ActiveUserTelegramAccount;

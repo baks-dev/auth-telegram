@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Auth\Telegram\Controller\User;
+namespace BaksDev\Auth\Telegram\Controller\Public;
 
 
 use BaksDev\Auth\Telegram\Type\Event\AccountTelegramEventUid;
@@ -50,7 +50,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[AsController]
 final class AuthController extends AbstractController
 {
-    #[Route('/telegram/auth', name: 'user.auth', methods: ['GET', 'POST'])]
+    #[Route('/telegram/auth', name: 'public.auth', methods: ['GET', 'POST'])]
     public function index(
         Request $request,
         AppCacheInterface $appCache,
@@ -68,7 +68,7 @@ final class AuthController extends AbstractController
         $form = $this->createForm(
             TelegramAuthForm::class,
             new TelegramAuthDTO(),
-            ['action' => $this->generateUrl('auth-telegram:user.auth'),]
+            ['action' => $this->generateUrl('auth-telegram:public.auth'),]
         );
 
         $Session = $request->getSession();
