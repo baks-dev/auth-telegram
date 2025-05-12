@@ -62,7 +62,7 @@ final class AuthController extends AbstractController
         if($this->getUsr())
         {
             /* Редирект на главную страницу */
-            return $this->redirectToRoute('core:user.homepage');
+            return $this->redirectToRoute('core:public.homepage');
         }
 
         $form = $this->createForm(
@@ -105,11 +105,11 @@ final class AuthController extends AbstractController
             ->format(BarcodeFormat::SVG)
             ->generate();
 
-        if($BarcodeWrite === false)
+        if(false === $BarcodeWrite)
         {
             /**
              * Проверить права на исполнение
-             * chmod +x /home/bundles.baks.dev/vПendor/baks-dev/barcode/Writer/Generate
+             * chmod +x /home/bundles.baks.dev/vendor/baks-dev/barcode/Writer/Generate
              * chmod +x /home/bundles.baks.dev/vendor/baks-dev/barcode/Reader/Decode
              * */
             throw new RuntimeException('Barcode write error');
@@ -123,7 +123,7 @@ final class AuthController extends AbstractController
                 'form' => $form->createView(),
                 'qrcode' => $QRCode,
                 'lifetime' => ($code['lifetime'] - time()),
-                'url' => $settings->settings()?->getUrl(), // ссылка на Telegram Bot
+                'url' => $settings->settings() ? $settings->settings()->getUrl() : '#', // ссылка на Telegram Bot
 
             ]
         );
