@@ -35,7 +35,9 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 #[AutoconfigureTag('baks.menu.admin')]
 final class Role implements RoleInterface, MenuAdminInterface
 {
-    public const ROLE = 'ROLE_ACCOUNT_TELEGRAM';
+    public const string ROLE = 'ROLE_ACCOUNT_TELEGRAM';
+
+    public const string KEY = 'srXAuXrdz';
 
     public function getRole(): string
     {
@@ -50,6 +52,14 @@ final class Role implements RoleInterface, MenuAdminInterface
     public function getPath(): string
     {
         return 'auth-telegram:admin.index';
+    }
+
+    /**
+     * Метод возвращает ключ раздела (для меню телеграм)
+     */
+    public function getPathKey(): string
+    {
+        return self::KEY;
     }
 
     /** Метод возвращает секцию, в которую помещается ссылка на раздел */
