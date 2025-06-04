@@ -30,7 +30,9 @@ use BaksDev\Auth\Telegram\Repository\ActiveUserTelegramAccount\ActiveUserTelegra
 use BaksDev\Core\Messenger\MessageDispatchInterface;
 use BaksDev\Telegram\Bot\Repository\UsersTableTelegramSettings\TelegramBotSettingsInterface;
 use BaksDev\Telegram\Request\TelegramRequest;
+use BaksDev\Telegram\Request\TelegramRequestInterface;
 use BaksDev\Users\User\Repository\GetUserById\GetUserByIdInterface;
+use BaksDev\Users\User\Type\Id\UserUid;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\HttpFoundation\Request;
@@ -70,9 +72,10 @@ final class TelegramBotAuthenticator extends AbstractAuthenticator
 
                 $TelegramRequest = $this->telegramRequest->request();
 
-                if(!$TelegramRequest)
+                if(false === ($TelegramRequest instanceof TelegramRequestInterface))
                 {
                     $this->logger->warning('Нераспознанный запрос Request');
+
                     return null;
                 }
 
@@ -84,10 +87,11 @@ final class TelegramBotAuthenticator extends AbstractAuthenticator
                 $UserUid = $this->ActiveUserTelegramAccount
                     ->findByChat($TelegramRequest->getChatId());
 
-                if($UserUid === null)
+                if(false === ($UserUid instanceof UserUid))
                 {
                     $this->logger->warning('Идентификатор авторизованного пользователя не найден');
                     $this->logger->warning('Проверьте, заполнен ли пользователем профиль');
+
                     return null;
                 }
 
@@ -98,7 +102,7 @@ final class TelegramBotAuthenticator extends AbstractAuthenticator
 
                 return $this->userById->get($UserUid);
 
-            })
+            }),
         );
     }
 
@@ -107,15 +111,14 @@ final class TelegramBotAuthenticator extends AbstractAuthenticator
         return null;
     }
 
-
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        if($this->telegramRequest->request())
+        if(true === ($this->telegramRequest->request() instanceof TelegramRequestInterface))
         {
             /** Отправляем сообщение для регистрации */
             $this->messageDispatch->dispatch(
                 new TelegramRegistrationEmailMessage($this->telegramRequest->request()),
-                transport: 'auth-telegram'
+                transport: 'auth-telegram',
             );
         }
 

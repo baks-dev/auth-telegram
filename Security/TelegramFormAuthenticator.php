@@ -34,6 +34,7 @@ use BaksDev\Core\Messenger\MessageDispatchInterface;
 use BaksDev\Telegram\Bot\Repository\UsersTableTelegramSettings\TelegramBotSettingsInterface;
 use BaksDev\Telegram\Request\TelegramRequest;
 use BaksDev\Users\User\Repository\GetUserById\GetUserByIdInterface;
+use BaksDev\Users\User\Type\Id\UserUid;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -52,39 +53,22 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class TelegramFormAuthenticator extends AbstractAuthenticator
 {
-    private const LOGIN_ROUTE = 'auth-telegram:public.auth';
-    private const SUCCESS_REDIRECT = 'core:public.homepage';
+    private const string LOGIN_ROUTE = 'auth-telegram:public.auth';
 
-    private ActiveUserTelegramAccountInterface $ActiveUserTelegramAccount;
-    private GetUserByIdInterface $userById;
-    private UrlGeneratorInterface $urlGenerator;
-    private FormFactoryInterface $form;
-    private AppCacheInterface $appCache;
-    private TranslatorInterface $translator;
-
+    private const string SUCCESS_REDIRECT = 'core:public.homepage';
 
     public function __construct(
-        UrlGeneratorInterface $urlGenerator,
-        ActiveUserTelegramAccountInterface $ActiveUserTelegramAccount,
-        GetUserByIdInterface $userById,
-        FormFactoryInterface $form,
-        AppCacheInterface $appCache,
-        TranslatorInterface $translator,
-    )
-    {
-        $this->ActiveUserTelegramAccount = $ActiveUserTelegramAccount;
-        $this->userById = $userById;
-        $this->urlGenerator = $urlGenerator;
-        $this->form = $form;
-        $this->appCache = $appCache;
-        $this->translator = $translator;
-    }
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly ActiveUserTelegramAccountInterface $ActiveUserTelegramAccount,
+        private readonly GetUserByIdInterface $userById,
+        private readonly FormFactoryInterface $form,
+        private readonly TranslatorInterface $translator,
+    ) {}
 
     public function supports(Request $request): ?bool
     {
         /** Проверяем, если авторизация через форму */
         return $request->isMethod('POST') && $this->getAuthFormUrl() === $request->getPathInfo();
-
     }
 
     public function authenticate(Request $request): Passport
@@ -102,7 +86,7 @@ final class TelegramFormAuthenticator extends AbstractAuthenticator
             return new SelfValidatingPassport(
                 new UserBadge('error', function() {
                     return null;
-                })
+                }),
             );
         }
 
@@ -118,7 +102,7 @@ final class TelegramFormAuthenticator extends AbstractAuthenticator
                     $UserUid = $this->ActiveUserTelegramAccount
                         ->findByEvent($AccountTelegramEventUid);
 
-                    if(!$UserUid)
+                    if(false === ($UserUid instanceof UserUid))
                     {
                         return null;
                     }
@@ -126,10 +110,6 @@ final class TelegramFormAuthenticator extends AbstractAuthenticator
                     /** Удаляем авторизацию доверенности пользователя */
 
                     $Session->remove('Authority');
-
-                    //$Authority = $this->appCache->init('Authority');
-                    //$Authority->delete((string) $UserUid);
-
                     return $this->userById->get($UserUid);
                 }
 
@@ -138,9 +118,9 @@ final class TelegramFormAuthenticator extends AbstractAuthenticator
             [
                 new CsrfTokenBadge(
                     'authenticate',
-                    ($request->get('telegram_auth_form'))['_token']
-                )
-            ]
+                    ($request->get('telegram_auth_form'))['_token'],
+                ),
+            ],
         );
 
     }
@@ -171,14 +151,14 @@ final class TelegramFormAuthenticator extends AbstractAuthenticator
                 [
                     'header' => $this->translator->trans(
                         'page.index',
-                        domain: 'auth-telegram.user'
+                        domain: 'auth-telegram.user',
                     ),
                     'message' => $this->translator->trans(
                         'danger.code',
-                        domain: 'auth-telegram.user'
+                        domain: 'auth-telegram.user',
                     ),
                 ],
-                401
+                401,
             );
         }
 
