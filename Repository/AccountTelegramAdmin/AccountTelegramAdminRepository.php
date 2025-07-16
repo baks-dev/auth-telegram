@@ -31,7 +31,7 @@ use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Users\Profile\Group\BaksDevUsersProfileGroupBundle;
 use BaksDev\Users\Profile\Group\Entity\Users\ProfileGroupUsers;
 use BaksDev\Users\Profile\Group\Type\Prefix\Group\GroupPrefix;
-use BaksDev\Users\Profile\UserProfile\Entity\Info\UserProfileInfo;
+use BaksDev\Users\Profile\UserProfile\Entity\Event\Info\UserProfileInfo;
 
 final class AccountTelegramAdminRepository implements AccountTelegramAdminInterface
 {
