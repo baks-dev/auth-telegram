@@ -55,7 +55,9 @@ final class AccountTelegramStatusTest extends KernelTestCase
             self::assertTrue($AccountTelegramStatus->equals($AccountTelegramStatus)); // объект класса
 
             $AccountTelegramStatusType = new AccountTelegramStatusType();
-            $platform = $this->getMockForAbstractClass(AbstractPlatform::class);
+            $platform = $this
+                ->getMockBuilder(AbstractPlatform::class)
+                ->getMock();
 
             $convertToDatabase = $AccountTelegramStatusType->convertToDatabaseValue($AccountTelegramStatus, $platform);
             self::assertEquals($AccountTelegramStatus->getTelegramStatusValue(), $convertToDatabase);
