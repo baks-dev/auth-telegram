@@ -26,14 +26,13 @@ declare(strict_types=1);
 namespace BaksDev\Auth\Telegram\Controller\Public\Tests;
 
 use BaksDev\Users\User\Tests\TestUserAccount;
+use PHPUnit\Framework\Attributes\DependsOnClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-
-/**
- * @group auth-telegram
- */
 #[When(env: 'test')]
+#[Group('auth-telegram')]
 final class AuthTelegramPublicControllerTest extends WebTestCase
 {
     private const string URL = '/telegram/auth';

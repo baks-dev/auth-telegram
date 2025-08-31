@@ -30,39 +30,24 @@ use BaksDev\Auth\Telegram\Entity\Event\AccountTelegramEvent;
 use BaksDev\Auth\Telegram\Repository\AccountTelegramEvent\AccountTelegramEventInterface;
 use BaksDev\Auth\Telegram\Type\Event\AccountTelegramEventUid;
 use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\AccountTelegramStatusActive;
-use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\AccountTelegramStatusNew;
 use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\Collection\AccountTelegramStatusCollection;
 use BaksDev\Auth\Telegram\UseCase\Telegram\Authenticator\AccountTelegramAuthenticatorDTO;
 use BaksDev\Auth\Telegram\UseCase\Telegram\Authenticator\AccountTelegramAuthenticatorHandler;
+use BaksDev\Auth\Telegram\UseCase\Telegram\Registration\Tests\AccountTelegramRegistrationHandlerTest;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
-use BaksDev\Products\Product\Type\Id\ProductUid;
-use BaksDev\Products\Product\Type\Offers\ConstId\ProductOfferConst;
-use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst;
-use BaksDev\Products\Product\Type\Offers\Variation\Modification\ConstId\ProductModificationConst;
-use BaksDev\Products\Sign\Entity\ProductSign;
-use BaksDev\Products\Sign\Repository\CurrentEvent\ProductSignCurrentEventInterface;
-use BaksDev\Products\Sign\Type\Id\ProductSignUid;
-use BaksDev\Products\Sign\Type\Status\ProductSignStatus\Collection\ProductSignStatusCollection;
-use BaksDev\Products\Sign\Type\Status\ProductSignStatus\ProductSignStatusDone;
-use BaksDev\Products\Sign\Type\Status\ProductSignStatus\ProductSignStatusNew;
-use BaksDev\Products\Sign\UseCase\Admin\NewEdit\Code\ProductSignCodeDTO;
-use BaksDev\Products\Sign\UseCase\Admin\NewEdit\ProductSignDTO;
-use BaksDev\Products\Sign\UseCase\Admin\NewEdit\ProductSignHandler;
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\User\Entity\User;
 use BaksDev\Users\User\Type\Id\UserUid;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\DependsOnClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
-use BaksDev\Auth\Telegram\UseCase\Telegram\Registration\Tests\AccountTelegramRegistrationHandlerTest;
 
-/**
- * @group auth-telegram
- * @depends BaksDev\Auth\Telegram\UseCase\Telegram\Registration\Tests\AccountTelegramRegistrationHandlerTest::class
- */
 #[When(env: 'test')]
+#[Group('auth-telegram')]
 final class AccountTelegramAuthenticatorHandlerTest extends KernelTestCase
 {
+    #[DependsOnClass(AccountTelegramRegistrationHandlerTest::class)]
     public function testUseCase(): void
     {
         /**
@@ -95,6 +80,7 @@ final class AccountTelegramAuthenticatorHandlerTest extends KernelTestCase
 
     }
 
+    #[DependsOnClass(AccountTelegramRegistrationHandlerTest::class)]
     public function testCompleteMain(): void
     {
         /** @var DBALQueryBuilder $dbal */
@@ -111,6 +97,7 @@ final class AccountTelegramAuthenticatorHandlerTest extends KernelTestCase
 
     }
 
+    #[DependsOnClass(AccountTelegramRegistrationHandlerTest::class)]
     public function testComplete(): void
     {
         $dbal = self::getContainer()->get(DBALQueryBuilder::class);

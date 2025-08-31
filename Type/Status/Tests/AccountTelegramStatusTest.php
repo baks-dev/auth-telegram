@@ -30,13 +30,13 @@ use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\Collection\AccountTe
 use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\Collection\AccountTelegramStatusInterface;
 use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatusType;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use PHPUnit\Framework\Attributes\DependsOnClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group auth-telegram
- */
 #[When(env: 'test')]
+#[Group('auth-telegram')]
 final class AccountTelegramStatusTest extends KernelTestCase
 {
     public function testUseCase(): void
