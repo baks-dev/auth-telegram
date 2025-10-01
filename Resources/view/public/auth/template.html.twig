@@ -9,5 +9,5 @@
 {% endblock %}
 
 {% block javascript %}
-<script nonce='{{ csp_nonce() }}' async  data-src="/assets/auth-telegram/timer.min.js?v={{ version }}" class="lazy"></script>
+<script nonce='{{ csp_nonce() }}' async  data-src="/assets/{{ version }}/auth-telegram/timer.min.js?v={{ version }}" class="lazy"></script>
 {% endblock %}
