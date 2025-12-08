@@ -31,34 +31,19 @@ use BaksDev\Auth\Telegram\Entity\Event\AccountTelegramEvent;
 use BaksDev\Auth\Telegram\Messenger\AccountTelegramMessage;
 use BaksDev\Core\Entity\AbstractHandler;
 use BaksDev\Users\User\Entity\User;
-use DomainException;
 
 final class AccountTelegramRegistrationHandler extends AbstractHandler
 {
-
     /** @see AccountTelegram */
-    public function handle(
-        AccountTelegramRegistrationDTO $command
-    ): string|AccountTelegram
+    public function handle(AccountTelegramRegistrationDTO $command): string|AccountTelegram
     {
-
         /** Валидация DTO  */
-        $this->validatorCollection->add($command);
+        $this->setCommand($command);
 
         /** Создаем пользователя User */
 
         $User = new User();
-        $this->main = new AccountTelegram($User->getId());
-        $this->event = new AccountTelegramEvent();
-
-        try
-        {
-            $this->prePersist($command);
-        }
-        catch(DomainException $errorUniqid)
-        {
-            return $errorUniqid->getMessage();
-        }
+        $this->preEventPersistOrUpdate(new AccountTelegram($User->getId()), AccountTelegramEvent::class);
 
         /** Валидация всех объектов */
         if($this->validatorCollection->isInvalid())
@@ -66,15 +51,13 @@ final class AccountTelegramRegistrationHandler extends AbstractHandler
             return $this->validatorCollection->getErrorUniqid();
         }
 
-        $this->entityManager->persist($User);
-
-
-        $this->entityManager->flush();
+        $this->persist($User);
+        $this->flush();
 
         /* Отправляем сообщение в шину */
         $this->messageDispatch->dispatch(
             message: new AccountTelegramMessage($this->main->getId(), $this->main->getEvent(), $command->getEvent()),
-            transport: 'auth-telegram'
+            transport: 'auth-telegram',
         );
 
         return $this->main;

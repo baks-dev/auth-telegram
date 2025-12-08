@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Auth\Telegram\Messenger\Authenticator;
 
 use BaksDev\Auth\Telegram\Entity\AccountTelegram;
+use BaksDev\Auth\Telegram\Entity\Event\AccountTelegramEvent;
 use BaksDev\Auth\Telegram\Repository\AccountTelegramEvent\AccountTelegramEventInterface;
 use BaksDev\Auth\Telegram\Type\Event\AccountTelegramEventUid;
 use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\AccountTelegramStatusBlock;
@@ -92,7 +93,7 @@ final readonly class TelegramAuthenticatorHandler
 
         $AccountTelegramEvent = $this->accountTelegramEvent->findByChat($TelegramRequest->getChatId());
 
-        if(!$AccountTelegramEvent)
+        if(false === ($AccountTelegramEvent instanceof AccountTelegramEvent))
         {
             $this
                 ->telegramSendMessage
@@ -137,7 +138,7 @@ final readonly class TelegramAuthenticatorHandler
 
         $handle = $this->authenticatorHandler->handle($AuthenticatorDTO);
 
-        if(!$handle instanceof AccountTelegram)
+        if(false === ($handle instanceof AccountTelegram))
         {
             $text = sprintf('%s: Ошибка авторизации пользователя Telegram', $handle);
 

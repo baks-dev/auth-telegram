@@ -34,12 +34,11 @@ use DomainException;
 final class AccountTelegramAuthenticatorHandler extends AbstractHandler
 {
     /** @see AccountTelegram */
-    public function handle(
-        AccountTelegramAuthenticatorDTO $command
-    ): string|AccountTelegram
+    public function handle(AccountTelegramAuthenticatorDTO $command): string|AccountTelegram
     {
+
         /** Валидация DTO  */
-        $this->validatorCollection->add($command);
+        $this->setCommand($command);
 
         $this->main = new AccountTelegram($command->getAccount());
         $this->event = new AccountTelegramEvent();
@@ -61,20 +60,20 @@ final class AccountTelegramAuthenticatorHandler extends AbstractHandler
 
 
         /** Присваиваем идентификатор авторизации */
-        $this->entityManager->clear();
+        $this->clear();
 
-        $this->main = $this->entityManager->getRepository(AccountTelegram::class)->findOneBy(['event' => $command->getEvent()]);
+        $this->main = $this->getRepository(AccountTelegram::class)->findOneBy(['event' => $command->getEvent()]);
         $this->main->setEvent($command->getNew());
 
         $this->event->setId($command->getNew());
-        $this->entityManager->persist($this->event);
+        $this->persist($this->event);
 
-        $this->entityManager->flush();
+        $this->flush();
 
         /* Отправляем сообщение в шину */
         $this->messageDispatch->dispatch(
             message: new AccountTelegramMessage($this->main->getId(), $this->main->getEvent(), $command->getEvent()),
-            transport: 'auth-telegram'
+            transport: 'auth-telegram',
         );
 
         return $this->main;
