@@ -65,26 +65,30 @@ final class TelegramBotAuthenticator extends AbstractAuthenticator
         /* Получить параметр 'profile' */
         $routeName = $request->attributes->get('_route');
 
-        if($routeName === 'telegram-bot:telegram.endpoint')
+        if($routeName !== 'telegram-bot:telegram.endpoint')
         {
-            $profile = $request->attributes->get('profile');
-
-            /* Получить secret_key и сравнить с заголовком X-Telegram-Bot-Api-Secret-Token */
-            if($profile)
-            {
-                $secretKey = $this->telegramBotSecretKey->findKey(new TelegramBotSettingsEventUid($profile));
-
-                if($secretKey === false)
-                {
-                    $this->logger->warning('secretKey не найден');
-                    return false;
-                }
-
-                return $secretKey === $request->headers->get('X-Telegram-Bot-Api-Secret-Token');
-            }
+            return false;
         }
 
-        return false;
+        $profile = $request->attributes->get('profile');
+
+        if($profile === false)
+        {
+            return false;
+        }
+
+
+        /* Получить secret_key и сравнить с заголовком X-Telegram-Bot-Api-Secret-Token */
+
+        $secretKey = $this->telegramBotSecretKey->findKey(new TelegramBotSettingsEventUid($profile));
+
+        if($secretKey === false)
+        {
+            $this->logger->warning('secretKey не найден');
+            return false;
+        }
+
+        return $secretKey === $request->headers->get('X-Telegram-Bot-Api-Secret-Token');
 
     }
 
