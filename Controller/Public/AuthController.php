@@ -37,7 +37,7 @@ use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Form\Search\SearchForm;
 use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
-use BaksDev\Telegram\Bot\Repository\UsersTableTelegramSettings\TelegramBotSettingsInterface;
+use BaksDev\Telegram\Bot\Repository\TelegramBotSettings\TelegramBotSettingsInterface;
 use chillerlan\QRCode\QRCode;
 use DateInterval;
 use RuntimeException;
