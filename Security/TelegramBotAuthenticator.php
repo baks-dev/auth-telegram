@@ -28,7 +28,8 @@ namespace BaksDev\Auth\Telegram\Security;
 use BaksDev\Auth\Telegram\Messenger\RegistrationEmail\TelegramRegistrationEmailMessage;
 use BaksDev\Auth\Telegram\Repository\ActiveUserTelegramAccount\ActiveUserTelegramAccountInterface;
 use BaksDev\Core\Messenger\MessageDispatchInterface;
-use BaksDev\Telegram\Bot\Repository\UsersTableTelegramSettings\TelegramBotSettingsInterface;
+use BaksDev\Telegram\Bot\Repository\TelegramBotSecretKey\TelegramBotSecretKeyInterface;
+use BaksDev\Telegram\Bot\Type\Settings\Event\TelegramBotSettingsEventUid;
 use BaksDev\Telegram\Request\TelegramRequest;
 use BaksDev\Telegram\Request\TelegramRequestInterface;
 use BaksDev\Users\User\Repository\GetUserById\GetUserByIdInterface;
@@ -50,18 +51,45 @@ final class TelegramBotAuthenticator extends AbstractAuthenticator
     public function __construct(
         #[Target('telegramLogger')] private readonly LoggerInterface $logger,
         private readonly TelegramRequest $telegramRequest,
-        private readonly TelegramBotSettingsInterface $telegramBotSettings,
         private readonly ActiveUserTelegramAccountInterface $ActiveUserTelegramAccount,
         private readonly GetUserByIdInterface $userById,
         private readonly LocaleSwitcher $localeSwitcher,
         private readonly MessageDispatchInterface $messageDispatch,
+        private readonly TelegramBotSecretKeyInterface $telegramBotSecretKey,
     ) {}
 
     public function supports(Request $request): ?bool
     {
         /** Проверяем авторизацию телеграмм-бота */
-        $this->telegramBotSettings->settings();
-        return $this->telegramBotSettings->equalsSecret($request->headers->get('X-Telegram-Bot-Api-Secret-Token'));
+
+        /* Получить параметр 'profile' */
+        $routeName = $request->attributes->get('_route');
+
+        if($routeName !== 'telegram-bot:telegram.endpoint')
+        {
+            return false;
+        }
+
+        $profile = $request->attributes->get('profile');
+
+        if($profile === false)
+        {
+            return false;
+        }
+
+
+        /* Получить secret_key и сравнить с заголовком X-Telegram-Bot-Api-Secret-Token */
+
+        $secretKey = $this->telegramBotSecretKey->findKey(new TelegramBotSettingsEventUid($profile));
+
+        if($secretKey === false)
+        {
+            $this->logger->warning('secretKey не найден');
+            return false;
+        }
+
+        return $secretKey === $request->headers->get('X-Telegram-Bot-Api-Secret-Token');
+
     }
 
     public function authenticate(Request $request): Passport

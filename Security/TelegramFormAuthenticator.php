@@ -29,10 +29,6 @@ use BaksDev\Auth\Telegram\Repository\ActiveUserTelegramAccount\ActiveUserTelegra
 use BaksDev\Auth\Telegram\Type\Event\AccountTelegramEventUid;
 use BaksDev\Auth\Telegram\UseCase\User\Auth\TelegramAuthDTO;
 use BaksDev\Auth\Telegram\UseCase\User\Auth\TelegramAuthForm;
-use BaksDev\Core\Cache\AppCacheInterface;
-use BaksDev\Core\Messenger\MessageDispatchInterface;
-use BaksDev\Telegram\Bot\Repository\UsersTableTelegramSettings\TelegramBotSettingsInterface;
-use BaksDev\Telegram\Request\TelegramRequest;
 use BaksDev\Users\User\Repository\GetUserById\GetUserByIdInterface;
 use BaksDev\Users\User\Type\Id\UserUid;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -48,7 +44,6 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
-use Symfony\Component\Translation\LocaleSwitcher;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class TelegramFormAuthenticator extends AbstractAuthenticator
