@@ -11,10 +11,12 @@ use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\AccountTelegramStatu
 use BaksDev\Auth\Telegram\UseCase\Admin\NewEdit\AccountTelegramDTO;
 use BaksDev\Auth\Telegram\UseCase\Admin\NewEdit\AccountTelegramHandler;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-#[AsMessageHandler]
+#[Autoconfigure(public: true)]
+#[AsMessageHandler(priority: 0)]
 final readonly class BanTelegramAccountHandler
 {
     public function __construct(

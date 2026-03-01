@@ -34,21 +34,23 @@ use BaksDev\Telegram\Bot\Messenger\TelegramEndpointMessage\TelegramEndpointMessa
 use BaksDev\Telegram\Request\Type\TelegramRequestIdentifier;
 use Psr\Cache\CacheItemInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+#[Autoconfigure(public: true)]
 #[AsMessageHandler(priority: 1)]
-final class TelegramRegistrationHandler
+final readonly class TelegramRegistrationHandler
 {
     public function __construct(
-        #[Target('authTelegramLogger')] private readonly LoggerInterface $logger,
-        private readonly AccountTelegramEventInterface $accountTelegramEvent,
-        private readonly AccountTelegramRegistrationHandler $telegramRegistrationHandler,
-        private readonly AppCacheInterface $cache,
-        private readonly TelegramSendMessages $telegramSendMessage,
-        private readonly UrlGeneratorInterface $urlGenerator
+        #[Target('authTelegramLogger')] private LoggerInterface $logger,
+        private AccountTelegramEventInterface $accountTelegramEvent,
+        private AccountTelegramRegistrationHandler $telegramRegistrationHandler,
+        private AppCacheInterface $cache,
+        private TelegramSendMessages $telegramSendMessage,
+        private UrlGeneratorInterface $urlGenerator
     ) {}
 
     /**

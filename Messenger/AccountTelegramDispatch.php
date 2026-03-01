@@ -28,9 +28,11 @@ namespace BaksDev\Auth\Telegram\Messenger;
 use BaksDev\Auth\Telegram\Repository\AccountTelegramAdmin\AccountTelegramAdminInterface;
 use BaksDev\Core\Cache\AppCacheInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-#[AsMessageHandler]
+#[Autoconfigure(public: true)]
+#[AsMessageHandler(priority: 0)]
 final class AccountTelegramDispatch
 {
     public function __construct(AccountTelegramAdminInterface $accountTelegramAdmin) {}

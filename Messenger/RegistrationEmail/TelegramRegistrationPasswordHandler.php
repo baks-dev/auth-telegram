@@ -37,11 +37,13 @@ use BaksDev\Auth\Telegram\UseCase\Admin\Remove\AccountTelegramRemoveHandler;
 use BaksDev\Telegram\Api\TelegramSendMessages;
 use BaksDev\Telegram\Request\Type\TelegramRequestMessage;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-#[AsMessageHandler]
+#[Autoconfigure(public: true)]
+#[AsMessageHandler(priority: 0)]
 final readonly class TelegramRegistrationPasswordHandler
 {
     public function __construct(

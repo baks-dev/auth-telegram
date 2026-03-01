@@ -38,9 +38,11 @@ use BaksDev\Telegram\Bot\Messenger\TelegramEndpointMessage\TelegramEndpointMessa
 use BaksDev\Telegram\Request\Type\TelegramRequestIdentifier;
 use Psr\Cache\CacheItemInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+#[Autoconfigure(public: true)]
 #[AsMessageHandler(priority: 0)]
 final readonly class TelegramAuthenticatorHandler
 {

@@ -34,9 +34,11 @@ use BaksDev\Auth\Telegram\UseCase\Admin\NewEdit\AccountTelegramHandler;
 use BaksDev\Telegram\Api\TelegramSendMessages;
 use BaksDev\Telegram\Request\Type\TelegramRequestMessage;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+#[Autoconfigure(public: true)]
 #[AsMessageHandler(priority: 999)]
 final readonly class TelegramRegistrationEmailHandler
 {
