@@ -33,7 +33,7 @@ use BaksDev\Core\Entity\AbstractHandler;
 use BaksDev\Users\User\Entity\User;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 
-#[Autoconfigure(public: true)]
+// #[Autoconfigure(public: true)]
 final class AccountTelegramRegistrationHandler extends AbstractHandler
 {
     /** @see AccountTelegram */

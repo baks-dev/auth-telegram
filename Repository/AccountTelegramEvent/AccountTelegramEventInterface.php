@@ -27,7 +27,7 @@ use BaksDev\Auth\Telegram\Entity\Event\AccountTelegramEvent;
 use BaksDev\Users\User\Type\Id\UserUid;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 
-#[Autoconfigure(public: true)]
+// #[Autoconfigure(public: true)]
 interface AccountTelegramEventInterface
 {
     /**
