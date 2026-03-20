@@ -1,17 +1,17 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
- *
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *
+ *  
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *
+ *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,63 +23,51 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Auth\Telegram\Entity;
+namespace BaksDev\Auth\Telegram\UseCase\Admin\Attach;
 
-use BaksDev\Auth\Telegram\Entity\Event\AccountTelegramEvent;
+use BaksDev\Auth\Email\Type\Email\AccountEmail;
+use BaksDev\Auth\Telegram\Entity\Event\AccountTelegramEventInterface;
 use BaksDev\Auth\Telegram\Type\Event\AccountTelegramEventUid;
-use BaksDev\Users\User\Entity\User;
 use BaksDev\Users\User\Type\Id\UserUid;
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
-/* AccountTelegram */
-
-#[ORM\Entity]
-#[ORM\Table(name: 'account_telegram')]
-class AccountTelegram
+final class AttachAccountDTO implements AccountTelegramEventInterface
 {
-    /** ID */
-    #[ORM\Id]
-    #[ORM\Column(type: UserUid::TYPE)]
-    private UserUid $id;
-
     /**
-     * Идентификатор События
+     * Идентификатор события
      */
-    #[Assert\NotBlank]
     #[Assert\Uuid]
-    #[ORM\Column(type: AccountTelegramEventUid::TYPE, unique: true)]
-    private AccountTelegramEventUid $event;
-
-    public function __construct(User|UserUid $usr)
-    {
-        $this->id = $usr instanceof User ? $usr->getId() : $usr;
-    }
+    private ?AccountTelegramEventUid $id = null;
 
     /**
-     * Идентификатор
+     * Идентификатор пользователя
      */
-    public function getId(): UserUid
+    #[Assert\Uuid]
+    private readonly UserUid $account;
+
+    /**
+     * Email пользователя
+     */
+    #[Assert\Email]
+    private AccountEmail $email;
+
+    public function getEvent(): ?AccountTelegramEventUid
     {
         return $this->id;
     }
 
-    public function __toString(): string
+    public function getEmail(): AccountEmail
     {
-        return (string) $this->id;
+        return $this->email;
     }
 
-    /**
-     * Идентификатор События
-     */
-    public function getEvent(): AccountTelegramEventUid
+    public function setEmail(AccountEmail $email): void
     {
-        return $this->event;
+        $this->email = $email;
     }
 
-    public function setEvent(AccountTelegramEventUid|AccountTelegramEvent $event): void
+    public function getAccount(): UserUid
     {
-        $this->event = $event instanceof AccountTelegramEvent ? $event->getId() : $event;
+        return $this->account;
     }
 }

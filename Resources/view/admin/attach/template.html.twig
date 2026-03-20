@@ -1,0 +1,12 @@
+{% trans_default_domain 'auth-telegram.admin' %}
+
+{% extends Template('/admin/base.html.twig') %}
+
+{% block title %}
+    {{ 'page.edit'|trans }}
+{% endblock %}
+
+{% block content %}
+    {{ include(_self|replace({ "template.html.twig": "/content.html.twig" })) }}
+{% endblock %}
+
