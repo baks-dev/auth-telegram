@@ -66,6 +66,11 @@ final class TelegramFormAuthenticator extends AbstractAuthenticator
         return $request->isMethod('POST') && $this->getAuthFormUrl() === $request->getPathInfo();
     }
 
+    protected function getAuthFormUrl(): string
+    {
+        return $this->urlGenerator->generate(self::LOGIN_ROUTE);
+    }
+
     public function authenticate(Request $request): Passport
     {
         $TelegramAuthDTO = new TelegramAuthDTO();
@@ -158,10 +163,5 @@ final class TelegramFormAuthenticator extends AbstractAuthenticator
         }
 
         return new RedirectResponse($this->getAuthFormUrl());
-    }
-
-    protected function getAuthFormUrl(): string
-    {
-        return $this->urlGenerator->generate(self::LOGIN_ROUTE);
     }
 }

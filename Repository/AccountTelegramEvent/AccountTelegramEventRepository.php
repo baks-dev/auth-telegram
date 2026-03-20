@@ -56,7 +56,7 @@ final class AccountTelegramEventRepository implements AccountTelegramEventInterf
             AccountTelegram::class,
             'main',
             'WITH',
-            'main.event = event.id'
+            'main.event = event.id',
         );
 
         return $qb->getOneOrNullResult();
@@ -85,7 +85,7 @@ final class AccountTelegramEventRepository implements AccountTelegramEventInterf
                 AccountTelegramEvent::class,
                 'event',
                 'WITH',
-                'event.id = main.event'
+                'event.id = main.event',
             );
 
         return $qb->getOneOrNullResult();

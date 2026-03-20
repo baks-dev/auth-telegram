@@ -47,7 +47,7 @@ return static function(ContainerConfigurator $configurator) {
     /* Статусы */
     $services->load(
         $NAMESPACE.'Type\Status\AccountTelegramStatus\\',
-        implode(DIRECTORY_SEPARATOR, [$PATH, 'Type', 'Status', 'AccountTelegramStatus'])  //$PATH.'Type/Status/AccountTelegramStatus'
+        implode(DIRECTORY_SEPARATOR, [$PATH, 'Type', 'Status', 'AccountTelegramStatus']),  //$PATH.'Type/Status/AccountTelegramStatus'
     );
 
 };

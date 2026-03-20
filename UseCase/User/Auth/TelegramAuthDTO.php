@@ -24,9 +24,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class TelegramAuthDTO
 {
-	/** Проверочный код */
-	#[Assert\NotBlank]
-	private ?string $code = null;
+    /** Проверочный код */
+    #[Assert\NotBlank]
+    private ?string $code = null;
 
     /**
      * Code

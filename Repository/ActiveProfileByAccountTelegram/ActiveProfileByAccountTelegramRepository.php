@@ -63,7 +63,7 @@ final class ActiveProfileByAccountTelegramRepository implements ActiveProfileByA
         $qb->setParameter(
             'telegram_status',
             new AccountTelegramStatus(new AccountTelegramStatus\AccountTelegramStatusActive()),
-            AccountTelegramStatus::TYPE
+            AccountTelegramStatus::TYPE,
         );
 
         $qb->join(
@@ -74,19 +74,19 @@ final class ActiveProfileByAccountTelegramRepository implements ActiveProfileByA
                 profile_info.usr = telegram_event.account AND 
                 profile_info.status = :profile_status AND 
                 profile_info.active = true
-            '
+            ',
         )
             ->setParameter(
                 'profile_status',
                 UserProfileStatusActive::class,
-                UserProfileStatus::TYPE
+                UserProfileStatus::TYPE,
             );
 
         $qb->join(
             'profile_info',
             UserProfile::class,
             'profile',
-            'profile.id = profile_info.profile'
+            'profile.id = profile_info.profile',
         );
 
 

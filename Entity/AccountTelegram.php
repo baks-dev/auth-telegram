@@ -58,17 +58,17 @@ class AccountTelegram
         $this->id = $usr instanceof User ? $usr->getId() : $usr;
     }
 
-    public function __toString(): string
-    {
-        return (string) $this->id;
-    }
-
     /**
      * Идентификатор
      */
     public function getId(): UserUid
     {
         return $this->id;
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->id;
     }
 
     /**

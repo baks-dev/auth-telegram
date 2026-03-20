@@ -41,7 +41,7 @@ final class AccountTelegramDeleteForm extends AbstractType
         $builder->add(
             'account_telegram_delete',
             SubmitType::class,
-            ['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-danger']]
+            ['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-danger']],
         );
     }
 

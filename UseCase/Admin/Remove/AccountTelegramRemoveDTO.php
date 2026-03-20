@@ -40,7 +40,8 @@ final class AccountTelegramRemoveDTO
     private UserUid $usr;
 
 
-    public function __construct(UserUid $usr) {
+    public function __construct(UserUid $usr)
+    {
         $this->usr = $usr;
     }
 

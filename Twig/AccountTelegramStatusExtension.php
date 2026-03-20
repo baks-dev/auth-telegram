@@ -37,7 +37,7 @@ final class AccountTelegramStatusExtension extends AbstractExtension
             new TwigFunction(
                 AccountTelegramStatus::TYPE,
                 [$this, 'status'],
-                ['needs_environment' => true, 'is_safe' => ['html']]
+                ['needs_environment' => true, 'is_safe' => ['html']],
             ),
         ];
     }

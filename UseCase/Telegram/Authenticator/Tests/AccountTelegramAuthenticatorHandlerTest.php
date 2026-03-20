@@ -47,11 +47,54 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 #[Group('auth-telegram')]
 final class AccountTelegramAuthenticatorHandlerTest extends KernelTestCase
 {
+    public static function tearDownAfterClass(): void
+    {
+        /**
+         * Инициируем статусы
+         *
+         * @var AccountTelegramStatusCollection $status
+         */
+        $status = self::getContainer()->get(AccountTelegramStatusCollection::class);
+        $status->cases();
+
+        /** @var EntityManagerInterface $em */
+        $em = self::getContainer()->get(EntityManagerInterface::class);
+
+
+        $user = $em->getRepository(User::class)
+            ->findOneBy(['id' => UserUid::TEST]);
+
+        if($user)
+        {
+            $em->remove($user);
+        }
+
+        $main = $em->getRepository(AccountTelegram::class)
+            ->findOneBy(['id' => UserUid::TEST]);
+
+        if($main)
+        {
+            $em->remove($main);
+        }
+
+        $event = $em->getRepository(AccountTelegramEvent::class)
+            ->findBy(['account' => UserUid::TEST]);
+
+        foreach($event as $remove)
+        {
+            $em->remove($remove);
+        }
+
+        $em->flush();
+        $em->clear();
+    }
+
     #[DependsOnClass(AccountTelegramRegistrationHandlerTest::class)]
     public function testUseCase(): void
     {
         /**
          * Инициируем статусы
+         *
          * @var AccountTelegramStatusCollection $status
          */
         $status = self::getContainer()->get(AccountTelegramStatusCollection::class);
@@ -62,7 +105,7 @@ final class AccountTelegramAuthenticatorHandlerTest extends KernelTestCase
         $AccountTelegramCurrentEvent = self::getContainer()->get(AccountTelegramEventInterface::class);
         $AccountTelegramEvent = $AccountTelegramCurrentEvent->findByUser(UserUid::TEST);
 
-        $AuthenticatorDTO = new AccountTelegramAuthenticatorDTO($AccountTelegramEventUid = clone (new AccountTelegramEventUid()));
+        $AuthenticatorDTO = new AccountTelegramAuthenticatorDTO($AccountTelegramEventUid = clone(new AccountTelegramEventUid()));
         $AccountTelegramEvent->getDto($AuthenticatorDTO);
 
         self::assertSame($AccountTelegramEventUid, $AuthenticatorDTO->getNew());
@@ -110,46 +153,5 @@ final class AccountTelegramAuthenticatorHandlerTest extends KernelTestCase
             ->setParameter('event', AccountTelegramEventUid::TEST);
 
         self::assertTrue($dbal->fetchExist());
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        /**
-         * Инициируем статусы
-         * @var AccountTelegramStatusCollection $status
-         */
-        $status = self::getContainer()->get(AccountTelegramStatusCollection::class);
-        $status->cases();
-
-        /** @var EntityManagerInterface $em */
-        $em = self::getContainer()->get(EntityManagerInterface::class);
-
-
-        $user = $em->getRepository(User::class)
-            ->findOneBy(['id' => UserUid::TEST]);
-
-        if($user)
-        {
-            $em->remove($user);
-        }
-
-        $main = $em->getRepository(AccountTelegram::class)
-            ->findOneBy(['id' => UserUid::TEST]);
-
-        if($main)
-        {
-            $em->remove($main);
-        }
-
-        $event = $em->getRepository(AccountTelegramEvent::class)
-            ->findBy(['account' => UserUid::TEST]);
-
-        foreach($event as $remove)
-        {
-            $em->remove($remove);
-        }
-
-        $em->flush();
-        $em->clear();
     }
 }

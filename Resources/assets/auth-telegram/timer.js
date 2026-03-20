@@ -22,23 +22,27 @@
 
 
 // Функция для обновления обратного отсчета
-function updateCountdown() {
+function updateCountdown()
+{
 
-    document.querySelectorAll('.auth-telegram-timer').forEach(function (item) {
+    document.querySelectorAll(".auth-telegram-timer").forEach(function(item)
+    {
 
         // Уменьшаем счетчик на секунду
-        let countdownSeconds = (item.innerText)--
+        let countdownSeconds = (item.innerText)--;
 
-        if (countdownSeconds < 12) {
-            item.classList.add('text-danger');
+        if(countdownSeconds < 12)
+        {
+            item.classList.add("text-danger");
         }
 
         // Проверяем, если время вышло, то останавливаем обратный отсчет
-        if (countdownSeconds > 0) {
+        if(countdownSeconds > 0)
+        {
             return;
         }
 
-        item.innerText = 'Время истекло!';
+        item.innerText = "Время истекло!";
         clearInterval(intervalId);
     });
 }

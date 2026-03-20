@@ -71,14 +71,14 @@ final class ActiveUserTelegramAccountRepository implements ActiveUserTelegramAcc
             ->setParameter(
                 'telegram_status',
                 new AccountTelegramStatus(AccountTelegramStatusActive::class),
-                AccountTelegramStatus::TYPE
+                AccountTelegramStatus::TYPE,
             );
 
         $dbal->join(
             'event',
             AccountTelegram::class,
             'main',
-            'main.event = event.id'
+            'main.event = event.id',
         );
 
         $exist = $this->DBALQueryBuilder->createQueryBuilder(self::class);
@@ -93,14 +93,14 @@ final class ActiveUserTelegramAccountRepository implements ActiveUserTelegramAcc
             'profile_info',
             UserProfile::class,
             'profile',
-            'profile.id = profile_info.profile'
+            'profile.id = profile_info.profile',
         );
 
 
         $dbal->setParameter(
             'profile_status',
             UserProfileStatusActive::class,
-            UserProfileStatus::TYPE
+            UserProfileStatus::TYPE,
         );
 
 
@@ -135,14 +135,14 @@ final class ActiveUserTelegramAccountRepository implements ActiveUserTelegramAcc
             ->setParameter(
                 'telegram_status',
                 new AccountTelegramStatus(new AccountTelegramStatusBlock()),
-                AccountTelegramStatus::TYPE
+                AccountTelegramStatus::TYPE,
             );
 
         $dbal->join(
             'event',
             AccountTelegram::class,
             'main',
-            'main.event = event.id'
+            'main.event = event.id',
         );
 
         /**  Проверяем, что имеется активный профиль */

@@ -52,7 +52,7 @@ final class UserProfileByChatRepository implements UserProfileByChatInterface
             'chat_event',
             AccountTelegram::class,
             'chat',
-            'chat.event = chat_event.id'
+            'chat.event = chat_event.id',
         );
 
         $qb->leftJoin(
@@ -73,7 +73,7 @@ final class UserProfileByChatRepository implements UserProfileByChatInterface
             'profile',
             UserProfilePersonal::class,
             'personal',
-            'personal.event = profile.event'
+            'personal.event = profile.event',
         );
 
         $qb->where('chat_event.chat = :chat')

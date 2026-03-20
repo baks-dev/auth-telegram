@@ -110,6 +110,14 @@ class AccountTelegramEvent extends EntityEvent
         return (string) $this->id;
     }
 
+    /**
+     * Идентификатор UserUid
+     */
+
+    public function setMain(AccountTelegram|UserUid $account): void
+    {
+        $this->account = $account instanceof AccountTelegram ? $account->getId() : $account;
+    }
 
     public function getId(): AccountTelegramEventUid
     {
@@ -120,15 +128,6 @@ class AccountTelegramEvent extends EntityEvent
     {
         $this->id = $id;
         return $this;
-    }
-
-    /**
-     * Идентификатор UserUid
-     */
-
-    public function setMain(AccountTelegram|UserUid $account): void
-    {
-        $this->account = $account instanceof AccountTelegram ? $account->getId() : $account;
     }
 
     public function getAccount(): ?UserUid

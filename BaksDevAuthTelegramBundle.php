@@ -55,5 +55,5 @@ class BaksDevAuthTelegramBundle extends AbstractBundle
     //            self::PATH.'Type/Status/AccountTelegramStatus');
     //
     //    }
-	
+
 }

@@ -14,7 +14,7 @@ final class TelegramAuthForm extends AbstractType
     {
         $builder->add(
             'code',
-            NumberType::class,['attr' => ['autocomplete' => 'off'],]
+            NumberType::class, ['attr' => ['autocomplete' => 'off'],],
         );
 
         /* Применить ******************************************************/
@@ -22,7 +22,7 @@ final class TelegramAuthForm extends AbstractType
         (
             'telegram_auth',
             SubmitType::class,
-            ['label' => 'Login', 'label_html' => true]
+            ['label' => 'Login', 'label_html' => true],
         );
     }
 
@@ -33,7 +33,7 @@ final class TelegramAuthForm extends AbstractType
                 'data_class' => TelegramAuthDTO::class,
                 'method' => 'POST',
                 'csrf_token_id' => 'authenticate',
-            ]
+            ],
         );
     }
 

@@ -109,7 +109,7 @@ final readonly class TelegramRegistrationHandler
 
         $menu[] = [
             'text' => 'Добавить профиль',
-            'url' => $this->urlGenerator->generate('users-profile-user:user.index', referenceType: UrlGenerator::ABSOLUTE_URL)
+            'url' => $this->urlGenerator->generate('users-profile-user:user.index', referenceType: UrlGenerator::ABSOLUTE_URL),
         ];
 
         $markup = json_encode([
@@ -126,7 +126,7 @@ final readonly class TelegramRegistrationHandler
 
         $this->logger->info('Добавили нового пользователя AccountTelegram', [
             self::class.':'.__LINE__,
-            'chat' => $TelegramRequest->getChatId()
+            'chat' => $TelegramRequest->getChatId(),
         ]);
     }
 }

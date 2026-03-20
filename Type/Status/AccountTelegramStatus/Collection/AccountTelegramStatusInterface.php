@@ -28,10 +28,10 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 #[AutoconfigureTag('baks.account.telegram.status')]
 interface AccountTelegramStatusInterface
 {
-    /** Возвращает значение (value) */
-    public function getValue(): string;
-
     /** Сортировка (чем меньше число - тем первым в итерации будет значение) */
     public static function sort(): int;
+
+    /** Возвращает значение (value) */
+    public function getValue(): string;
 
 }

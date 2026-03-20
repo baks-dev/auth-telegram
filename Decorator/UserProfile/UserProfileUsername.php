@@ -44,15 +44,15 @@ final class UserProfileUsername implements UserProfileInterface
         $this->currentAccountTelegram = $currentAccountTelegram;
     }
 
+    public static function priority(): int
+    {
+        return 810;
+    }
+
     /** Возвращает значение (value) */
     public function getValue(UserUid $usr): mixed
     {
         $current = $this->currentAccountTelegram->findArrayByUser($usr);
         return $current['telegram_firstname'] ?? false;
-    }
-
-    public static function priority(): int
-    {
-        return 810;
     }
 }

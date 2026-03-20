@@ -83,7 +83,7 @@ final readonly class TelegramAuthenticatorHandler
                 self::class.':'.__LINE__,
                 'chat' => $TelegramRequest->getChatId(),
                 'identifier' => $TelegramRequest->getIdentifier(),
-                'data' => $cacheItem->get()
+                'data' => $cacheItem->get(),
             ]);
 
             return;
@@ -108,7 +108,7 @@ final readonly class TelegramAuthenticatorHandler
 
             $this->logger->info('Пользователь AccountTelegram не найден', [
                 self::class.':'.__LINE__,
-                'chat' => $TelegramRequest->getChatId()
+                'chat' => $TelegramRequest->getChatId(),
             ]);
 
             return;
@@ -131,7 +131,7 @@ final readonly class TelegramAuthenticatorHandler
 
             $this->logger->warning('Пользователь заблокирован!', [
                 self::class.':'.__LINE__,
-                'chat' => $TelegramRequest->getChatId()
+                'chat' => $TelegramRequest->getChatId(),
             ]);
 
             return;
@@ -183,7 +183,7 @@ final readonly class TelegramAuthenticatorHandler
 
         $this->logger->info('Пользователю отправлен проверочный код ', [
             self::class.':'.__LINE__,
-            'chat' => $TelegramRequest->getChatId()
+            'chat' => $TelegramRequest->getChatId(),
         ]);
 
     }

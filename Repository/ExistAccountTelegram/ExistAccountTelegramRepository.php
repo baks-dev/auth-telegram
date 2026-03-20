@@ -49,7 +49,7 @@ final class ExistAccountTelegramRepository implements ExistAccountTelegramInterf
             'event',
             AccountTelegram::class,
             'account',
-            'account.event = event.id'
+            'account.event = event.id',
         );
 
         $dbal->where('event.chat = :chat');

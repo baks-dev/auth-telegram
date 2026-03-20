@@ -69,7 +69,7 @@ final class DeleteController extends AbstractController
                 'page.delete',
                 $handle instanceof AccountTelegram ? 'success.delete' : 'danger.delete',
                 'auth-telegram.admin',
-                $handle
+                $handle,
             );
 
             return $this->redirectToRoute('auth-telegram:admin.index');

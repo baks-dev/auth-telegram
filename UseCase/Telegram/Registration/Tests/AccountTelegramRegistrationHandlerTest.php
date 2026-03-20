@@ -49,6 +49,7 @@ final class AccountTelegramRegistrationHandlerTest extends KernelTestCase
     {
         /**
          * Инициируем статусы
+         *
          * @var AccountTelegramStatusCollection $status
          */
         $status = self::getContainer()->get(AccountTelegramStatusCollection::class);

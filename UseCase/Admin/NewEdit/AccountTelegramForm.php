@@ -27,7 +27,6 @@ namespace BaksDev\Auth\Telegram\UseCase\Admin\NewEdit;
 
 
 use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus;
-use BaksDev\Auth\Telegram\Type\Status\AccountTelegramStatus\Collection\AccountTelegramStatusCollection;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -47,24 +46,22 @@ final class AccountTelegramForm extends AbstractType
 
 
         $builder->add('status', ChoiceType::class, [
-            'choices'  => AccountTelegramStatus::cases(),
-            'choice_value' => function (AccountTelegramStatus $status)
-            {
+            'choices' => AccountTelegramStatus::cases(),
+            'choice_value' => function(AccountTelegramStatus $status) {
                 return $status->getTelegramStatusValue();
             },
-            'choice_label' => function (AccountTelegramStatus $status)
-            {
+            'choice_label' => function(AccountTelegramStatus $status) {
                 return $status->getTelegramStatusValue();
             },
             'label' => false,
-            'translation_domain' => 'auth-telegram.status'
+            'translation_domain' => 'auth-telegram.status',
         ]);
 
         /* Сохранить ******************************************************/
         $builder->add(
             'account_telegram',
             SubmitType::class,
-            ['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-primary']]
+            ['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-primary']],
         );
     }
 

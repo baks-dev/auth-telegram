@@ -35,6 +35,8 @@ final class AccountTelegramHandler extends AbstractHandler
     /** @see AccountTelegram */
     public function handle(AccountTelegramDTO $command): string|AccountTelegram
     {
+
+
         $this
             ->setCommand($command)
             ->preEventPersistOrUpdate(new AccountTelegram($command->getAccount()), AccountTelegramEvent::class);

@@ -97,7 +97,7 @@ final class AccountTelegramRoleRepository implements AccountTelegramRoleInterfac
                 'usr',
                 ProfileGroup::class,
                 'grp',
-                'grp.prefix = usr.prefix'
+                'grp.prefix = usr.prefix',
             );
 
         $dbal
@@ -105,7 +105,7 @@ final class AccountTelegramRoleRepository implements AccountTelegramRoleInterfac
                 'grp',
                 ProfileRole::class,
                 'role',
-                'role.event = grp.event'
+                'role.event = grp.event',
             );
 
         $dbal
@@ -113,7 +113,7 @@ final class AccountTelegramRoleRepository implements AccountTelegramRoleInterfac
                 'role',
                 ProfileVoter::class,
                 'voter',
-                'voter.role = role.id'
+                'voter.role = role.id',
             );
 
         $dbal
@@ -132,12 +132,12 @@ final class AccountTelegramRoleRepository implements AccountTelegramRoleInterfac
                 profile_info.profile = usr.profile AND 
                 profile_info.status = :profile_status AND 
                 profile_info.active = true
-            '
+            ',
             )
             ->setParameter(
                 'profile_status',
                 UserProfileStatusActive::class,
-                UserProfileStatus::TYPE
+                UserProfileStatus::TYPE,
             );
 
 
@@ -146,7 +146,7 @@ final class AccountTelegramRoleRepository implements AccountTelegramRoleInterfac
                 'profile_info',
                 UserProfile::class,
                 'profile',
-                'profile.id = profile_info.profile'
+                'profile.id = profile_info.profile',
             );
 
 
@@ -156,7 +156,7 @@ final class AccountTelegramRoleRepository implements AccountTelegramRoleInterfac
                 'profile_info',
                 AccountTelegram::class,
                 'account',
-                'account.id = profile_info.usr'
+                'account.id = profile_info.usr',
             );
 
         /** Account Telegram */
@@ -167,7 +167,7 @@ final class AccountTelegramRoleRepository implements AccountTelegramRoleInterfac
                 'account',
                 AccountTelegramEvent::class,
                 'account_event',
-                'account_event.id = account.event'
+                'account_event.id = account.event',
             );
 
         return $dbal

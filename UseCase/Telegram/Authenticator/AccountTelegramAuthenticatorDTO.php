@@ -70,7 +70,8 @@ final class AccountTelegramAuthenticatorDTO implements AccountTelegramEventInter
     private readonly AccountTelegramStatus $status;
 
 
-    public function __construct(AccountTelegramEventUid $new) {
+    public function __construct(AccountTelegramEventUid $new)
+    {
 
         $this->new = $new;
         $this->status = new AccountTelegramStatus(AccountTelegramStatusActive::class);

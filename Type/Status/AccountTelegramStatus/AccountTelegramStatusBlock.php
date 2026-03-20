@@ -39,15 +39,15 @@ class AccountTelegramStatusBlock implements AccountTelegramStatusInterface
      */
     public const STATUS = 'block';
 
-    /** Возвращает значение (value) */
-    public function getValue(): string
-    {
-        return self::STATUS;
-    }
-
     /** Сортировка (чем меньше число - тем первым в итерации будет значение) */
     public static function sort(): int
     {
         return 200;
+    }
+
+    /** Возвращает значение (value) */
+    public function getValue(): string
+    {
+        return self::STATUS;
     }
 }

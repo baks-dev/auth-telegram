@@ -76,23 +76,11 @@ final class AccountTelegramStatus
 
     }
 
-    public function __toString(): string
-    {
-        return $this->status ? $this->status->getValue() : '';
-    }
-
     /** Возвращает значение AccountTelegramStatus */
     public function getTelegramStatus(): AccountTelegramStatusInterface
     {
         return $this->status;
     }
-
-    /** Возвращает строковое значение AccountTelegramStatus */
-    public function getTelegramStatusValue(): ?string
-    {
-        return $this->status?->getValue();
-    }
-
 
     public static function getDeclared(): array
     {
@@ -100,11 +88,15 @@ final class AccountTelegramStatus
             get_declared_classes(),
             static function($className) {
                 return in_array(AccountTelegramStatusInterface::class, class_implements($className), true);
-            }
+            },
         );
     }
 
-
+    /** Возвращает строковое значение AccountTelegramStatus */
+    public function getTelegramStatusValue(): ?string
+    {
+        return $this->status?->getValue();
+    }
 
     public static function cases(): array
     {
@@ -122,12 +114,16 @@ final class AccountTelegramStatus
         return $case;
     }
 
+    public function __toString(): string
+    {
+        return $this->status ? $this->status->getValue() : '';
+    }
+
     public function equals(mixed $status): bool
     {
         $status = new self($status);
         return $this->getTelegramStatusValue() === $status->getTelegramStatusValue();
     }
-
 
 
 }

@@ -64,7 +64,7 @@ final readonly class BanTelegramAccountHandler
         $this->logger->warning('AccountTelegram успешно заблокирован', [
             self::class.':'.__LINE__,
             'UserUid' => $command->getId(),
-            'FirstName' => $AccountTelegramDTO->getFirstname()
+            'FirstName' => $AccountTelegramDTO->getFirstname(),
         ]);
     }
 }

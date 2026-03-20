@@ -68,14 +68,14 @@ final class AccountTelegramAdminRepository implements AccountTelegramAdminInterf
             'group_profile',
             UserProfileInfo::class,
             'profile',
-            'profile.profile = group_profile.profile'
+            'profile.profile = group_profile.profile',
         );
 
         $dbal->join(
             'profile',
             AccountTelegram::class,
             'telegram',
-            'telegram.id = profile.usr'
+            'telegram.id = profile.usr',
         );
 
         $dbal
@@ -83,7 +83,7 @@ final class AccountTelegramAdminRepository implements AccountTelegramAdminInterf
                 'telegram',
                 AccountTelegramEvent::class,
                 'telegram_event',
-                'telegram_event.id = telegram.event'
+                'telegram_event.id = telegram.event',
             );
 
 

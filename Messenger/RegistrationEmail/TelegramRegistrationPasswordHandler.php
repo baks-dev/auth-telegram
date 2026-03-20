@@ -89,7 +89,7 @@ final readonly class TelegramRegistrationPasswordHandler
         {
             $this->logger->info('Не проверяем пользователя: AccountTelegram не найден', [
                 self::class.':'.__LINE__,
-                'chat' => $TelegramRequest->getChatId()
+                'chat' => $TelegramRequest->getChatId(),
             ]);
 
             //            $this
@@ -129,7 +129,7 @@ final readonly class TelegramRegistrationPasswordHandler
 
             $this->logger->warning('AccountEvent не найден. Удаляем AccountTelegram', [
                 self::class.':'.__LINE__,
-                'UserUid' => $AccountTelegramEvent->getAccount()
+                'UserUid' => $AccountTelegramEvent->getAccount(),
             ]);
 
             return;

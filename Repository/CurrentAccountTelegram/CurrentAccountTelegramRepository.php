@@ -58,7 +58,7 @@ final readonly class CurrentAccountTelegramRepository implements CurrentAccountT
                 'main',
                 AccountTelegramEvent::class,
                 'event',
-                'event.id = main.event'
+                'event.id = main.event',
             );
 
         return $dbal

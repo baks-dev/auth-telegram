@@ -39,15 +39,15 @@ class AccountTelegramStatusActive implements AccountTelegramStatusInterface
      */
     public const STATUS = 'active';
 
-    /** Возвращает значение (value) */
-    public function getValue(): string
-    {
-        return self::STATUS;
-    }
-
     /** Сортировка (чем меньше число - тем первым в итерации будет значение) */
     public static function sort(): int
     {
         return 100;
+    }
+
+    /** Возвращает значение (value) */
+    public function getValue(): string
+    {
+        return self::STATUS;
     }
 }

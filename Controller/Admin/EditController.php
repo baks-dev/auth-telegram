@@ -75,7 +75,7 @@ final class EditController extends AbstractController
                 'page.edit',
                 $handle instanceof AccountTelegram ? 'success.edit' : 'danger.edit',
                 'auth-telegram.admin',
-                $handle
+                $handle,
             );
 
             return $this->redirectToRoute('auth-telegram:admin.index');

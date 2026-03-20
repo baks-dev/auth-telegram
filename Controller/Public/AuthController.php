@@ -68,7 +68,7 @@ final class AuthController extends AbstractController
         $form = $this->createForm(
             TelegramAuthForm::class,
             new TelegramAuthDTO(),
-            ['action' => $this->generateUrl('auth-telegram:public.auth'),]
+            ['action' => $this->generateUrl('auth-telegram:public.auth'),],
         );
 
         $Session = $request->getSession();
@@ -86,7 +86,7 @@ final class AuthController extends AbstractController
             $Session->set($key, [
                 'qr' => $qr,
                 'code' => $number,
-                'lifetime' => (time() + 60) // срок действия 1 минута
+                'lifetime' => (time() + 60), // срок действия 1 минута
             ]);
 
             /** @var ApcuAdapter $cache */
@@ -125,7 +125,7 @@ final class AuthController extends AbstractController
                 'lifetime' => ($code['lifetime'] - time()),
                 'url' => $settings->settings() ? $settings->settings()->getUrl() : '#', // ссылка на Telegram Bot
 
-            ]
+            ],
         );
     }
 }

@@ -43,7 +43,8 @@ final class AccountTelegramStatusCollection
     {
         $case = null;
 
-        foreach ($this->status as $status) {
+        foreach($this->status as $status)
+        {
             $case[] = new $status();
         }
 

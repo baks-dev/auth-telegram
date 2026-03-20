@@ -42,7 +42,8 @@ final class AccountTelegramModifyListener
     public function __construct(
         RequestStack $request,
         TokenStorageInterface $token,
-    ) {
+    )
+    {
         $this->request = $request;
         $this->token = $token;
     }
@@ -51,7 +52,8 @@ final class AccountTelegramModifyListener
     {
         $token = $this->token->getToken();
 
-        if ($token) {
+        if($token)
+        {
 
             $data->setUsr($token->getUser());
 
@@ -64,10 +66,11 @@ final class AccountTelegramModifyListener
         }
 
         // Если пользователь не из консоли
-        if ($this->request->getCurrentRequest()) {
+        if($this->request->getCurrentRequest())
+        {
             $data->upModifyAgent(
                 new IpAddress($this->request->getCurrentRequest()->getClientIp()), // Ip
-                $this->request->getCurrentRequest()->headers->get('User-Agent') ?: 'telegram-bot' // User-Agent
+                $this->request->getCurrentRequest()->headers->get('User-Agent') ?: 'telegram-bot', // User-Agent
             );
         }
     }

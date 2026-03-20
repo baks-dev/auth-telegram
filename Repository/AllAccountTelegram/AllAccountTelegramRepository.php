@@ -75,17 +75,17 @@ final class AllAccountTelegramRepository implements AllAccountTelegramInterface
                 'telegram',
                 AccountTelegramEvent::class,
                 'telegram_event',
-                'telegram_event.id = telegram.event'
+                'telegram_event.id = telegram.event',
             );
 
         $dbal
             ->addSelect('telegram_modify.mod_date AS telegram_update')
             ->leftJoin(
-            'telegram',
-            AccountTelegramModify::class,
-            'telegram_modify',
-            'telegram_modify.event = telegram.event'
-        );
+                'telegram',
+                AccountTelegramModify::class,
+                'telegram_modify',
+                'telegram_modify.event = telegram.event',
+            );
 
 
         /* Поиск */
@@ -96,8 +96,7 @@ final class AllAccountTelegramRepository implements AllAccountTelegramInterface
                 //->addSearchEqualUid('account.id')
 
                 ->addSearchLike('telegram_event.username')
-                ->addSearchLike('telegram_event.firstname')
-            ;
+                ->addSearchLike('telegram_event.firstname');
 
         }
 

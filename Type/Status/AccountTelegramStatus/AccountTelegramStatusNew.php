@@ -39,15 +39,15 @@ class AccountTelegramStatusNew implements AccountTelegramStatusInterface
      */
     public const STATUS = 'new';
 
-    /** Возвращает значение (value) */
-    public function getValue(): string
-    {
-        return self::STATUS;
-    }
-
     /** Сортировка (чем меньше число - тем первым в итерации будет значение) */
     public static function sort(): int
     {
         return 1;
+    }
+
+    /** Возвращает значение (value) */
+    public function getValue(): string
+    {
+        return self::STATUS;
     }
 }

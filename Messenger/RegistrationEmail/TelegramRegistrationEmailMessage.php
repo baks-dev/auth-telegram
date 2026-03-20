@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace BaksDev\Auth\Telegram\Messenger\RegistrationEmail;
 
-use BaksDev\Auth\Telegram\Type\Event\AccountTelegramEventUid;
 use BaksDev\Telegram\Request\TelegramRequestInterface;
 use BaksDev\Users\User\Type\Id\UserUid;
 
